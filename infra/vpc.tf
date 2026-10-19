@@ -1,5 +1,5 @@
 locals {
-  project_tag     = "drift-thesis"
+  project_tag      = "drift-thesis"
   eks_cluster_name = "drift-thesis-eks"
   common_tags = {
     project = local.project_tag
@@ -25,8 +25,8 @@ module "vpc" {
   private_subnets = ["10.0.0.0/20", "10.0.16.0/20"]
   public_subnets  = ["10.0.32.0/20", "10.0.48.0/20"]
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+  enable_nat_gateway     = true
+  single_nat_gateway     = true
   one_nat_gateway_per_az = false
 
   enable_dns_support   = true
@@ -35,12 +35,12 @@ module "vpc" {
   tags = local.common_tags
 
   public_subnet_tags = merge(local.common_tags, {
-    "kubernetes.io/role/elb"                       = "1"
+    "kubernetes.io/role/elb"                          = "1"
     "kubernetes.io/cluster/${local.eks_cluster_name}" = "shared"
   })
 
   private_subnet_tags = merge(local.common_tags, {
-    "kubernetes.io/role/internal-elb"              = "1"
+    "kubernetes.io/role/internal-elb"                 = "1"
     "kubernetes.io/cluster/${local.eks_cluster_name}" = "shared"
   })
 }
