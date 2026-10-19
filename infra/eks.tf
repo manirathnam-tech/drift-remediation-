@@ -35,7 +35,7 @@ module "eks" {
 
   authentication_mode                      = "API_AND_CONFIG_MAP"
   enable_cluster_creator_admin_permissions = false
-  enable_irsa                              = true
+  enable_irsa                              = false
 
   access_entries = {
     admin = {
@@ -70,7 +70,7 @@ module "eks" {
   eks_managed_node_groups = {
     workers = {
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.small"]
       capacity_type  = "SPOT"
 
       min_size     = 2
@@ -90,9 +90,4 @@ output "eks_cluster_name" {
 output "eks_cluster_endpoint" {
   description = "EKS Kubernetes API endpoint"
   value       = module.eks.cluster_endpoint
-}
-
-output "eks_oidc_provider_arn" {
-  description = "OIDC provider ARN for IRSA"
-  value       = module.eks.oidc_provider_arn
 }
