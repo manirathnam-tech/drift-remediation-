@@ -6,3 +6,5 @@ Cost Explorer is account-wide and may include charges outside this project. It c
 
 | Session (UTC) | Started | Ended | Result | Spend |
 |---|---|---|---|---|
+
+| 20261022T013427Z | 2026-10-22T01:34:27Z | — | In progress | Pending Cost Explorer |
