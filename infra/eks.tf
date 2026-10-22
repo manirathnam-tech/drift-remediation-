@@ -54,16 +54,26 @@ module "eks" {
   }
 
   addons = {
-    coredns = {}
+    coredns = {
+      addon_version = "v1.14.7-eksbuild.11"
+    }
 
     eks-pod-identity-agent = {
       before_compute = true
+      addon_version  = "v1.4.0-eksbuild.4"
     }
 
-    kube-proxy = {}
+    kube-proxy = {
+      addon_version = "v1.36.0-eksbuild.48"
+    }
 
     vpc-cni = {
       before_compute = true
+      addon_version  = "v1.23.2-eksbuild.3"
+
+      configuration_values = jsonencode({
+        enableNetworkPolicy = "true"
+      })
     }
   }
 
@@ -74,7 +84,7 @@ module "eks" {
       capacity_type  = "SPOT"
 
       min_size     = 2
-      desired_size = 2
+      desired_size = 3
       max_size     = 3
     }
   }

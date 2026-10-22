@@ -4,3 +4,7 @@
 *.tfplan
 crash.log
 crash.*.log
+
+# Local one-command session marker
+.drift-session
+

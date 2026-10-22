@@ -1,0 +1,36 @@
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: aws-secrets-manager
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: ap-southeast-2
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: drift-gitops-repo
+  namespace: argocd
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: aws-secrets-manager
+    kind: ClusterSecretStore
+  target:
+    name: drift-gitops-repo
+    creationPolicy: Owner
+    template:
+      type: Opaque
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: repository
+      data:
+        type: git
+        url: git@github.com:manirathnam-tech/drift-gitops.git
+        sshPrivateKey: "{{ .privateKey }}"
+  data:
+    - secretKey: privateKey
+      remoteRef:
+        key: drift-gitops-deploy-key
