@@ -34,7 +34,7 @@ def obj(kind: str, name: str, spec: dict, api_version: str = "v1") -> dict:
 def base_for(kind: str, i: int) -> dict:
     if kind == "Deployment":
         name = ("frontend", "cartservice", "currencyservice")[i % 3]
-        return obj(kind, name, {"replicas": 2, "selector": {"matchLabels": {"app": name}},
+        return obj(kind, name, {"replicas": 1, "selector": {"matchLabels": {"app": name}},
             "template": {"metadata": {"labels": {"app": name}}, "spec": {
                 "containers": [{"name": name, "image": "example.invalid/" + name + ":v1",
                     "securityContext": {"allowPrivilegeEscalation": False, "runAsNonRoot": True,

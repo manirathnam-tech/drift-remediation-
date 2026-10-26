@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drift-thesis.example/schemas/corpus-record-1.0.0.json",
+  "title": "Drift remediation synthetic corpus record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "class", "severity", "intent", "kind", "namespace", "name", "mutation", "expected_remediation", "scenario_id", "synthetic", "seed", "split", "base_object", "rationale", "evidence_required", "source_trace"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^SYN-[0-9]+-[0-9]{4}$"},
+    "class": {"enum": ["benign", "operational", "critical"]},
+    "severity": {"type": "integer", "enum": [0, 1, 2, 3]},
+    "intent": {"enum": ["intentional-benign", "unintended", "malicious"]},
+    "kind": {"enum": ["Deployment", "Service", "Role", "RoleBinding", "NetworkPolicy"]},
+    "namespace": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "mutation": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["op", "path"], "properties": {"op": {"enum": ["add", "remove", "replace"]}, "path": {"type": "string", "pattern": "^/"}, "value": {}}, "allOf": [{"if": {"properties": {"op": {"enum": ["add", "replace"]}}, "required": ["op"]}, "then": {"required": ["value"]}}, {"if": {"properties": {"op": {"const": "remove"}}, "required": ["op"]}, "then": {"not": {"required": ["value"]}}}], "additionalProperties": false}},
+    "expected_remediation": {"enum": ["revert", "accept-into-Git", "revert + escalate"]},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "synthetic": {"const": true},
+    "seed": {"type": "integer"},
+    "split": {"enum": ["dev", "test"]},
+    "base_object": {"type": "object"},
+    "rationale": {"type": "string", "minLength": 1},
+    "evidence_required": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "source_trace": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+  },
+  "allOf": [
+    {"if": {"properties": {"severity": {"const": 0}}, "required": ["severity"]}, "then": {"properties": {"class": {"const": "benign"}}}},
+    {"if": {"properties": {"severity": {"enum": [1, 2]}}, "required": ["severity"]}, "then": {"properties": {"class": {"const": "operational"}}}},
+    {"if": {"properties": {"severity": {"const": 3}}, "required": ["severity"]}, "then": {"properties": {"class": {"const": "critical"}}}},
+    {"if": {"properties": {"class": {"const": "critical"}}, "required": ["class"]}, "then": {"properties": {"expected_remediation": {"const": "revert + escalate"}}}},
+    {"if": {"properties": {"intent": {"const": "malicious"}}, "required": ["intent"]}, "then": {"properties": {"expected_remediation": {"const": "revert + escalate"}}}},
+    {"if": {"properties": {"class": {"const": "benign"}, "intent": {"const": "intentional-benign"}}, "required": ["class", "intent"]}, "then": {"properties": {"expected_remediation": {"const": "accept-into-Git"}}}}
+  ]
+}
