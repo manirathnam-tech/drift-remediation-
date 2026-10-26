@@ -1,0 +1,24 @@
+{
+  "record_count": 300,
+  "schema_version": "1.0.0",
+  "seed": 20261022,
+  "sha256": {
+    "balance_report.md": "0a16abad4981b16949d3b366962294cb3526620e7c80bdb2fceeea45962a6433",
+    "corpus.jsonl": "eb1e0abbd58d2d5e0ceb48dc44c48035fef8f1fcb2367599d87a21d58d680ff4",
+    "dev.jsonl": "349846b126627754be9166621d19d536f9de05009df09c885740d60c1e8e7606",
+    "generate_corpus.py": "ef730c8c23bf4ef0612a105692e58d9ec2e0844c453a03f3b05439d057f7349e",
+    "schema.json": "b185de5cb6dbc3f99fb1fa7023da67d06d54ddf000fc20602cd29b365c195af4",
+    "test.jsonl": "4617dfc0b7b1d5f8ed33d409106b598a96bd705438bbf0f46d5268657b335e2b"
+  },
+  "split": {
+    "dev": 60,
+    "test": 240
+  },
+  "stratified_by": [
+    "severity",
+    "kind"
+  ],
+  "supervisor_review": "pending",
+  "synthetic": true,
+  "usage_note": "Synthetic fixtures, not observed incidents. Prompt tuning may use dev only; test is held out."
+}
