@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="520" viewBox="0 0 1000 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500" y="30" text-anchor="middle" font-size="20" font-family="sans-serif">Argo CD detection latency (20 trials)</text>
+<line x1="85" y1="445.0" x2="975" y2="445.0" stroke="#ddd"/>
+<text x="75" y="450.0" text-anchor="end" font-size="12" font-family="sans-serif">0</text>
+<line x1="85" y1="381.7" x2="975" y2="381.7" stroke="#ddd"/>
+<text x="75" y="386.7" text-anchor="end" font-size="12" font-family="sans-serif">2000</text>
+<line x1="85" y1="318.3" x2="975" y2="318.3" stroke="#ddd"/>
+<text x="75" y="323.3" text-anchor="end" font-size="12" font-family="sans-serif">4000</text>
+<line x1="85" y1="255.0" x2="975" y2="255.0" stroke="#ddd"/>
+<text x="75" y="260.0" text-anchor="end" font-size="12" font-family="sans-serif">6000</text>
+<line x1="85" y1="191.7" x2="975" y2="191.7" stroke="#ddd"/>
+<text x="75" y="196.7" text-anchor="end" font-size="12" font-family="sans-serif">8000</text>
+<line x1="85" y1="128.3" x2="975" y2="128.3" stroke="#ddd"/>
+<text x="75" y="133.3" text-anchor="end" font-size="12" font-family="sans-serif">10000</text>
+<line x1="85" y1="65.0" x2="975" y2="65.0" stroke="#ddd"/>
+<text x="75" y="70.0" text-anchor="end" font-size="12" font-family="sans-serif">12000</text>
+<rect x="85.0" y="160.4" width="39.8" height="284.6" fill="#3478b8"/>
+<text x="104.9" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">1</text>
+<rect x="129.8" y="193.3" width="39.8" height="251.7" fill="#3478b8"/>
+<text x="149.6" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">2</text>
+<rect x="174.5" y="164.1" width="39.8" height="280.9" fill="#3478b8"/>
+<text x="194.4" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">3</text>
+<rect x="219.2" y="179.9" width="39.8" height="265.1" fill="#3478b8"/>
+<text x="239.1" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">4</text>
+<rect x="264.0" y="228.1" width="39.8" height="216.9" fill="#3478b8"/>
+<text x="283.9" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">5</text>
+<rect x="308.8" y="185.9" width="39.8" height="259.1" fill="#3478b8"/>
+<text x="328.6" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">6</text>
+<rect x="353.5" y="180.8" width="39.8" height="264.2" fill="#3478b8"/>
+<text x="373.4" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">7</text>
+<rect x="398.2" y="172.0" width="39.8" height="273.0" fill="#3478b8"/>
+<text x="418.1" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">8</text>
+<rect x="443.0" y="189.8" width="39.8" height="255.2" fill="#3478b8"/>
+<text x="462.9" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">9</text>
+<rect x="487.8" y="171.7" width="39.8" height="273.3" fill="#3478b8"/>
+<text x="507.6" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">10</text>
+<rect x="532.5" y="218.2" width="39.8" height="226.8" fill="#3478b8"/>
+<text x="552.4" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">11</text>
+<rect x="577.2" y="176.8" width="39.8" height="268.2" fill="#3478b8"/>
+<text x="597.1" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">12</text>
+<rect x="622.0" y="189.3" width="39.8" height="255.7" fill="#3478b8"/>
+<text x="641.9" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">13</text>
+<rect x="666.8" y="190.5" width="39.8" height="254.5" fill="#3478b8"/>
+<text x="686.6" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">14</text>
+<rect x="711.5" y="191.2" width="39.8" height="253.8" fill="#3478b8"/>
+<text x="731.4" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">15</text>
+<rect x="756.2" y="201.8" width="39.8" height="243.2" fill="#3478b8"/>
+<text x="776.1" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">16</text>
+<rect x="801.0" y="194.8" width="39.8" height="250.2" fill="#3478b8"/>
+<text x="820.9" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">17</text>
+<rect x="845.8" y="126.2" width="39.8" height="318.8" fill="#3478b8"/>
+<text x="865.6" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">18</text>
+<rect x="890.5" y="149.2" width="39.8" height="295.8" fill="#3478b8"/>
+<text x="910.4" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">19</text>
+<rect x="935.2" y="137.4" width="39.8" height="307.6" fill="#3478b8"/>
+<text x="955.1" y="465" text-anchor="middle" font-size="10" font-family="sans-serif">20</text>
+<text x="25" y="255.0" transform="rotate(-90 25 255.0)" text-anchor="middle" font-size="13" font-family="sans-serif">Latency (ms)</text>
+<text x="500" y="505" text-anchor="middle" font-size="13" font-family="sans-serif">Trial</text>
+</svg>
