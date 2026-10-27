@@ -1,0 +1,15 @@
+{
+  "note": "Ten held-out synthetic test records chosen to span all three classes. Run each on a clean baseline and restore/sync before the next sample. Critical and outage samples can affect workloads or broaden access.",
+  "records": [
+    {"id": "SYN-20261022-0006", "class": "benign", "kind": "Deployment"},
+    {"id": "SYN-20261022-0027", "class": "benign", "kind": "Service"},
+    {"id": "SYN-20261022-0065", "class": "benign", "kind": "NetworkPolicy"},
+    {"id": "SYN-20261022-0099", "class": "operational", "kind": "Service"},
+    {"id": "SYN-20261022-0120", "class": "operational", "kind": "Role"},
+    {"id": "SYN-20261022-0155", "class": "operational", "kind": "Deployment"},
+    {"id": "SYN-20261022-0177", "class": "operational", "kind": "Service"},
+    {"id": "SYN-20261022-0227", "class": "critical", "kind": "Deployment"},
+    {"id": "SYN-20261022-0274", "class": "critical", "kind": "RoleBinding"},
+    {"id": "SYN-20261022-0297", "class": "critical", "kind": "NetworkPolicy"}
+  ]
+}

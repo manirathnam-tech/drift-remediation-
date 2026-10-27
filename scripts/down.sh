@@ -30,7 +30,7 @@ if [[ -f "$STATE_FILE" ]]; then
   ended="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   printf '| %s | %s | %s | Down completed | Pending Cost Explorer |
 ' "$session" "$started" "$ended" >> "$ROOT/docs/cost-log.md"
-  printf 'Session %s: Terraform bootstrap state and Secrets Manager deploy key were retained.\n' "$session" >> "$ROOT/docs/cost-log.md"
+  printf 'Session %s: Terraform bootstrap state, experiment ledger and Secrets Manager deploy key were retained.\n' "$session" >> "$ROOT/docs/cost-log.md"
   rm -f "$STATE_FILE"
 fi
 

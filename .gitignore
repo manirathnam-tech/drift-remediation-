@@ -4,6 +4,7 @@
 *.tfplan
 crash.log
 crash.*.log
+infra/injector/build/
 
 # Local one-command session marker
 .drift-session
