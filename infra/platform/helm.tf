@@ -8,6 +8,13 @@ resource "helm_release" "argocd" {
 
   values = [
     yamlencode({
+      configs = {
+        cm = {
+          "timeout.reconciliation"        = "30s"
+          "timeout.reconciliation.jitter" = "0s"
+        }
+      }
+
       server = {
         ingress = {
           enabled = false
