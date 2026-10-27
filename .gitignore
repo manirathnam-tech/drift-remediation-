@@ -5,6 +5,9 @@
 crash.log
 crash.*.log
 infra/injector/build/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
 
 # Local one-command session marker
 .drift-session
