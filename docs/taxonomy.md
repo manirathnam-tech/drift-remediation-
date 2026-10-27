@@ -1,10 +1,11 @@
 # Drift taxonomy and severity rubric
 
-**Status:** Draft for supervisor review  
+**Status:** Approved by supervisor
 **Schema version:** `1.0.0`  
+**Review date:** Not recorded
 **Scope:** Kubernetes workload and namespaced configuration drift in the Online Boutique experiment.
 
-> This is a project-specific operational rubric informed by the studies below. The cited studies do not jointly prescribe these exact labels or thresholds. Supervisor review is still required before the rubric is treated as approved ground truth.
+> This is a project-specific operational rubric informed by the studies below. The cited studies do not jointly prescribe these exact labels or thresholds. The supervisor reviewed and approved this rubric; the approval date was not recorded.
 
 ## 1. Unit of labelling and decision order
 
@@ -103,11 +104,13 @@ The DRIFT-20 synthetic generator includes `kind`, `namespace`, `name`, `mutation
 
 The generator's default output is a **12-record synthetic pilot** for checking schema consistency and label coverage. It is not evidence that 300 real instances are feasible, and it is not part of the scored corpus. Keep 300 as the proposed corpus target while measuring injection, reset, adjudication and validation throughput. Do not reduce the target without supervisor approval. If the approved target changes, record the approval/date/reason and report the achieved real corpus size, exclusions and incomplete trials in the thesis.
 
-Before scoring real data, run a small pilot, have two reviewers independently label a sample, resolve disagreements using the rules above, and report inter-rater agreement. Submit this draft rubric and examples to the supervisor; record the review outcome and revisions here before freezing the schema.
+Before scoring real data, run a small pilot, have two reviewers independently label a sample, resolve disagreements using the rules above, and report inter-rater agreement. The supervisor approved this rubric. Record the approval date and any requested revisions when available; the approval status is reflected here.
 
-**Supervisor review:** Pending  
-**Review date:** Pending  
-**Approved version:** Pending
+**Supervisor review:** Approved
+**Review date:** Not recorded
+**Approved version:** `1.0.0`
+
+The versioned corpus files were generated before this approval and retain their original generation metadata and hashes. This approval records the rubric review; it does not claim that synthetic fixtures are observed or supervisor-adjudicated incidents.
 
 ### Generate the synthetic pilot
 
