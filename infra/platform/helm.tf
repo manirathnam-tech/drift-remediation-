@@ -15,6 +15,58 @@ resource "helm_release" "argocd" {
         }
       }
 
+      notifications = {
+        enabled = true
+        secret = {
+          create = true
+          name   = "argocd-notifications-secret"
+        }
+        notifiers = {
+          "service.webhook.drift-collector" = <<-EOT
+            url: ${var.drift_collector_webhook_url}
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: X-Drift-Webhook-Secret
+                value: $drift-collector-webhook-secret
+            retryMax: 3
+          EOT
+        }
+        templates = {
+          "template.drift-out-of-sync" = <<-EOT
+            webhook:
+              drift-collector:
+                method: POST
+                body: |
+                  {
+                    "event_type": "argocd.application.out_of_sync",
+                    "application": "{{ .app.metadata.name }}",
+                    "namespace": "{{ .app.spec.destination.namespace }}",
+                    "revision": "{{ .app.status.sync.revision }}",
+                    "sync_status": "{{ .app.status.sync.status }}",
+                    "resources": [
+                      {{- $first := true -}}
+                      {{- range .app.status.resources -}}
+                      {{- if eq .status "OutOfSync" -}}
+                      {{- if not $first }},{{ end -}}
+                      {{ toJson . }}
+                      {{- $first = false -}}
+                      {{- end -}}
+                      {{- end -}}
+                    ]
+                  }
+          EOT
+        }
+        triggers = {
+          "trigger.on-drift-out-of-sync" = <<-EOT
+            - description: Application has one or more resources out of sync
+              send:
+                - drift-out-of-sync
+              when: app.status.sync.status == 'OutOfSync'
+          EOT
+        }
+      }
+
       server = {
         ingress = {
           enabled = false

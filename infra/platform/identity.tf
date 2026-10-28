@@ -42,14 +42,24 @@ resource "aws_iam_role_policy" "external_secrets" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = [
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:GetSecretValue"
-      ]
-      Resource = "arn:${data.aws_partition.current.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.current.account_id}:secret:drift-gitops-deploy-key-*"
-    }]
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = "arn:${data.aws_partition.current.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.current.account_id}:secret:drift-gitops-deploy-key-*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = aws_secretsmanager_secret.argocd_webhook.arn
+      }
+    ]
   })
 }
 
