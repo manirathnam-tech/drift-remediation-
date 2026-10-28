@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import importlib.util
 import os
-import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -76,6 +75,7 @@ class InjectorTests(unittest.TestCase):
              patch.object(injector, "_api_client", return_value=fake_client), \
              patch.object(injector, "_patch_record", side_effect=lambda *_: events.append("patch") or SimpleNamespace(metadata=SimpleNamespace(resource_version="9"))), \
              patch.object(injector, "_write_ledger", side_effect=lambda *args: events.append(("ledger", args[2], args[3]))), \
+             patch.object(injector, "require_previous_reset_clean"), \
              patch.dict(os.environ, {"LEDGER_TABLE": "ledger-test"}):
             result = injector.handler({"instance_id": self.record["id"], "trial_id": "unit-1"}, None)
         self.assertEqual(events[0], "patch")

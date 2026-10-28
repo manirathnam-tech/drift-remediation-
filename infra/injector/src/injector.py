@@ -7,13 +7,12 @@ import os
 import re
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import boto3
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
-
 
 NAMESPACE = "online-boutique"
 FIELD_MANAGER = "drift-injector"
@@ -310,7 +309,7 @@ def handler(event: dict | None, context=None) -> dict:
 
         epoch_ms = time.time_ns() // 1_000_000
         t_inject = (
-            datetime.fromtimestamp(epoch_ms / 1000, timezone.utc)
+            datetime.fromtimestamp(epoch_ms / 1000, UTC)
             .isoformat(timespec="milliseconds")
             .replace("+00:00", "Z")
         )
