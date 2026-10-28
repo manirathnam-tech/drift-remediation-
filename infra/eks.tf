@@ -57,6 +57,12 @@ module "eks" {
       kubernetes_groups = ["drift-injector"]
       type              = "STANDARD"
     }
+
+    drift_collector = {
+      principal_arn     = aws_iam_role.drift_collector.arn
+      kubernetes_groups = ["drift-collector"]
+      type              = "STANDARD"
+    }
   }
 
   addons = {

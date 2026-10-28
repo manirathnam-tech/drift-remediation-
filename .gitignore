@@ -5,6 +5,7 @@
 crash.log
 crash.*.log
 infra/injector/build/
+infra/collector/collector.zip
 __pycache__/
 .pytest_cache/
 .ruff_cache/
