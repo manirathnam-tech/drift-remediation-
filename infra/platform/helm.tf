@@ -15,9 +15,7 @@ resource "helm_release" "argocd" {
           "accounts.drift-collector"      = "apiKey"
         }
         rbac = {
-          policy = {
-            csv = "p, role:drift-collector, applications, get, default/online-boutique, allow\ng, drift-collector, role:drift-collector"
-          }
+          "policy.csv" = "p, role:drift-collector, applications, get, default/online-boutique, allow\ng, drift-collector, role:drift-collector"
         }
       }
 
