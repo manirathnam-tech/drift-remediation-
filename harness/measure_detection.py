@@ -3,12 +3,10 @@
 
 import csv
 import json
-import os
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-
 
 IMAGE = (
     "218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/"
@@ -76,8 +74,6 @@ def write_plot(rows):
 
 
 def main():
-    global COUNT
-
     RESULTS.mkdir(parents=True, exist_ok=True)
 
     records = [
@@ -180,9 +176,7 @@ def main():
         if not result:
             raise SystemExit(f"No injection result found in {job_name} logs:\n{logs}")
 
-        injected_at = datetime.fromisoformat(
-            result["t_inject"].replace("Z", "+00:00")
-        ).timestamp() * 1000
+        injected_at = datetime.fromisoformat(result["t_inject"]).timestamp() * 1000
 
         detected_at = None
         deadline = time.monotonic() + TIMEOUT_SECONDS

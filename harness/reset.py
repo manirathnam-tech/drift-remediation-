@@ -6,8 +6,7 @@ import json
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
-
+from datetime import UTC, datetime
 
 REGION = "ap-southeast-2"
 TABLE = "drift-thesis-experiment-ledger"
@@ -25,7 +24,7 @@ def kubectl_json(*args):
 
 
 def utc_now():
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def timestamp(value):
@@ -161,9 +160,7 @@ def main():
 
             operation_is_new = bool(
                 op_started
-                and datetime.fromisoformat(
-                    op_started.replace("Z", "+00:00")
-                )
+                and datetime.fromisoformat(op_started)
                 >= started
             )
 
@@ -218,7 +215,13 @@ def main():
             )
         )
 
-    except Exception as exc:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        RuntimeError,
+        subprocess.CalledProcessError,
+    ) as exc:
         try:
             update_ledger(
                 args.instance_id,
@@ -227,7 +230,7 @@ def main():
                 started,
                 str(exc),
             )
-        except Exception as log_error:
+        except (OSError, subprocess.CalledProcessError) as log_error:
             print(
                 f"Could not write reset result to ledger: {log_error}",
                 file=sys.stderr,
