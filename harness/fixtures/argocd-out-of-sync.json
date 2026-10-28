@@ -1,0 +1,17 @@
+{
+  "event_type": "argocd.application.out_of_sync",
+  "application": "online-boutique",
+  "namespace": "online-boutique",
+  "revision": "e6941d7b11734ea2df18db7c91ff737f947f2380",
+  "sync_status": "OutOfSync",
+  "resources": [
+    {
+      "group": "apps",
+      "kind": "Deployment",
+      "namespace": "online-boutique",
+      "name": "frontend",
+      "status": "OutOfSync",
+      "health": {"status": "Healthy"}
+    }
+  ]
+}
