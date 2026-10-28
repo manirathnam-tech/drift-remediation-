@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: drift-collector-service-proxy
+  namespace: argocd
+rules:
+  - apiGroups: [""]
+    resources: ["services/proxy"]
+    resourceNames: ["argocd-server"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drift-collector-service-proxy
+  namespace: argocd
+subjects:
+  - kind: Group
+    name: drift-collector
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: drift-collector-service-proxy
+  apiGroup: rbac.authorization.k8s.io

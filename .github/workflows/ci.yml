@@ -54,7 +54,7 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install -r requirements-dev.txt -r harness/requirements.txt -r infra/injector/requirements.txt
       - name: Lint Python
-        run: ruff check harness infra/injector/src
+        run: ruff check harness infra/injector/src infra/collector/src
       - name: Run tests
         run: python -m pytest -q infra/injector/src/test_injector.py
 

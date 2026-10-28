@@ -12,6 +12,12 @@ resource "helm_release" "argocd" {
         cm = {
           "timeout.reconciliation"        = "30s"
           "timeout.reconciliation.jitter" = "0s"
+          "accounts.drift-collector"      = "apiKey"
+        }
+        rbac = {
+          policy = {
+            csv = "p, role:drift-collector, applications, get, default/online-boutique, allow\ng, drift-collector, role:drift-collector"
+          }
         }
       }
 
@@ -21,7 +27,7 @@ resource "helm_release" "argocd" {
           create = true
           name   = "argocd-notifications-secret"
         }
-        notifiers = {
+        notifiers = var.drift_collector_webhook_url == "" ? {} : {
           "service.webhook.drift-collector" = <<-EOT
             url: ${var.drift_collector_webhook_url}
             headers:
@@ -43,6 +49,7 @@ resource "helm_release" "argocd" {
                     "application": "{{ .app.metadata.name }}",
                     "namespace": "{{ .app.spec.destination.namespace }}",
                     "revision": "{{ .app.status.sync.revision }}",
+                    "reconciled_at": "{{ .app.status.reconciledAt }}",
                     "sync_status": "{{ .app.status.sync.status }}",
                     "resources": [
                       {{- $first := true -}}
