@@ -4,7 +4,7 @@ variable "drift_collector_webhook_url" {
   default     = ""
 
   validation {
-    condition     = var.drift_collector_webhook_url == "" || can(regex("^https://", var.drift_collector_webhook_url))
+    condition     = var.drift_collector_webhook_url == "" || can(regex("^https?://", var.drift_collector_webhook_url))
     error_message = "Set the drift collector webhook URL to HTTPS or leave it empty until the collector exists."
   }
 }

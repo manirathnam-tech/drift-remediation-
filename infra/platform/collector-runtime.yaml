@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drift-collector
+  namespace: argocd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drift-collector
+  namespace: argocd
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: drift-collector
+  template:
+    metadata:
+      labels:
+        app: drift-collector
+    spec:
+      serviceAccountName: drift-collector
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: collector
+          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:local-20261029-direct-v2
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: AWS_REGION_NAME
+              value: ap-southeast-2
+            - name: EKS_CLUSTER_NAME
+              value: drift-thesis-eks
+            - name: EKS_CLUSTER_ENDPOINT
+              value: https://1B53C09C0A6CFF62336A7C81EE1AE1C3.gr7.ap-southeast-2.eks.amazonaws.com
+            - name: ARGOCD_APP_NAME
+              value: online-boutique
+            - name: ARGOCD_NAMESPACE
+              value: argocd
+            - name: ARGOCD_SERVICE_NAME
+              value: argocd-server
+            - name: WEBHOOK_SECRET_ARN
+              value: arn:aws:secretsmanager:ap-southeast-2:218733194774:secret:drift-thesis-argocd-webhook-8VGWyc
+            - name: ARGOCD_TOKEN_SECRET_ARN
+              value: arn:aws:secretsmanager:ap-southeast-2:218733194774:secret:drift-thesis-argocd-collector-api-token-UEP3w2
+            - name: IDEMPOTENCY_TABLE
+              value: drift-thesis-collector-idempotency
+            - name: EVENT_TOPIC_ARN
+              value: arn:aws:sns:ap-southeast-2:218733194774:drift-thesis-events
+            - name: FAILURE_QUEUE_URL
+              value: https://sqs.ap-southeast-2.amazonaws.com/218733194774/drift-thesis-collector-dlq
+          volumeMounts:
+            - name: eks-api-ca
+              mountPath: /etc/drift-collector
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+      volumes:
+        - name: eks-api-ca
+          configMap:
+            name: drift-eks-api-ca
+            items:
+              - key: ca.crt
+                path: ca.crt
+              - key: argocd.crt
+                path: argocd.crt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drift-collector
+  namespace: argocd
+spec:
+  type: ClusterIP
+  selector:
+    app: drift-collector
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
