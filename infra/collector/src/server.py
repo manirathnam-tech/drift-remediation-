@@ -32,7 +32,7 @@ class CollectorHandler(BaseHTTPRequestHandler):
                 json.loads(result.get("body", "{}")),
                 result.get("headers", {}),
             )
-        except Exception:
+        except Exception:    # noqa: BLE001
             self._respond(500, {"error": "collector request failed"})
 
     def _respond(self, status, payload, headers=None):
