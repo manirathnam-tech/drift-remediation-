@@ -6,7 +6,13 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["services/proxy"]
-    resourceNames: ["argocd-server"]
+    resourceNames:
+      - argocd-server
+      - https:argocd-server:443
+    verbs: ["get"]
+  - apiGroups: ["argoproj.io"]
+    resources: ["applications"]
+    resourceNames: ["online-boutique"]
     verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
