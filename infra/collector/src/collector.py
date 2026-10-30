@@ -15,6 +15,7 @@ from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 import boto3
+from audit_ledger import record_event
 
 REGION = os.environ.get("AWS_REGION_NAME", "ap-southeast-2")
 APP_NAME = os.environ.get("ARGOCD_APP_NAME", "online-boutique")
@@ -38,6 +39,7 @@ ALLOWED_RESOURCES = {
 
 _secrets: dict[str, tuple[str, float]] = {}
 _idempotency_table = None
+_audit_ledger_table = None
 
 
 class EventError(ValueError):
@@ -107,7 +109,11 @@ def _validate_payload(payload: dict) -> list[dict]:
         raise EventError("reconciled_at must be an RFC3339 timestamp") from exc
 
     resources = payload.get("resources")
-    if not isinstance(resources, list) or not resources or len(resources) > MAX_RESOURCES:
+    if (
+        not isinstance(resources, list)
+        or not resources
+        or len(resources) > MAX_RESOURCES
+    ):
         raise EventError("resources must contain between 1 and 20 entries")
 
     for resource in resources:
@@ -283,6 +289,18 @@ def _table():
     return _idempotency_table
 
 
+def _audit_table():
+    global _audit_ledger_table
+
+    if _audit_ledger_table is None:
+        _audit_ledger_table = boto3.resource(
+            "dynamodb",
+            region_name=REGION,
+        ).Table(os.environ["AUDIT_TABLE"])
+
+    return _audit_ledger_table
+
+
 def _publish(event: dict) -> None:
     boto3.client("sns", region_name=REGION).publish(
         TopicArn=os.environ["EVENT_TOPIC_ARN"],
@@ -386,6 +404,11 @@ def handler(event: dict, context=None) -> dict:
             raise
 
         try:
+            record_event(
+                _audit_table(),
+                trial_event,
+                int(time.time()),
+            )
             _publish(trial_event)
         except Exception:
             try:

@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: collector
-          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:local-20261029-direct-v2
+          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:drift30-audit-20261030-v1
           ports:
             - name: http
               containerPort: 8080
@@ -52,6 +52,8 @@ spec:
               value: arn:aws:secretsmanager:ap-southeast-2:218733194774:secret:drift-thesis-argocd-collector-api-token-UEP3w2
             - name: IDEMPOTENCY_TABLE
               value: drift-thesis-collector-idempotency
+            - name: AUDIT_TABLE
+              value: drift-thesis-audit-ledger
             - name: EVENT_TOPIC_ARN
               value: arn:aws:sns:ap-southeast-2:218733194774:drift-thesis-events
             - name: FAILURE_QUEUE_URL
