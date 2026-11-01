@@ -105,8 +105,8 @@ resource "aws_iam_role_policy" "github_golden_publisher" {
         Resource = aws_s3_bucket.golden_manifests.arn
       },
       {
-        Effect = "Allow"
-        Action = ["s3:ListBucket", "s3:ListBucketMultipartUploads"]
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket", "s3:ListBucketMultipartUploads"]
         Resource = aws_s3_bucket.golden_manifests.arn
         Condition = {
           StringLike = {

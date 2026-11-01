@@ -24,7 +24,7 @@ resource "aws_sqs_queue" "drift_event_consumer" {
   message_retention_seconds  = 1209600
   sqs_managed_sse_enabled    = true
   visibility_timeout_seconds = each.key == "treatment" ? 900 : 30
-  redrive_policy            = each.key == "treatment" ? jsonencode({
+  redrive_policy = each.key == "treatment" ? jsonencode({
     deadLetterTargetArn = aws_sqs_queue.treatment_dead_letter.arn
     maxReceiveCount     = 3
   }) : null
