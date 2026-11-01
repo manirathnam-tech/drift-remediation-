@@ -1,5 +1,5 @@
 variable "github_repository" {
-  description = "GitHub owner/repository allowed to publish the injector image."
+  description = "GitHub owner/repository allowed to publish runtime images."
   type        = string
   default     = "manirathnam-tech/drift-remediation-"
 }
@@ -39,7 +39,7 @@ resource "aws_iam_role" "github_ecr_publisher" {
 }
 
 resource "aws_iam_role_policy" "github_ecr_publisher" {
-  name = "publish-drift-injector-image"
+  name = "publish-drift-runtime-images"
   role = aws_iam_role.github_ecr_publisher.id
 
   policy = jsonencode({
@@ -60,7 +60,11 @@ resource "aws_iam_role_policy" "github_ecr_publisher" {
           "ecr:PutImage",
           "ecr:UploadLayerPart",
         ]
-        Resource = aws_ecr_repository.injector_runtime.arn
+        Resource = [
+          aws_ecr_repository.injector_runtime.arn,
+          aws_ecr_repository.collector_runtime.arn,
+          aws_ecr_repository.treatment_worker.arn,
+        ]
       },
     ]
   })

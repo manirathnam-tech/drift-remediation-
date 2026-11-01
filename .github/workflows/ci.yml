@@ -51,17 +51,32 @@ jobs:
             requirements-dev.txt
             harness/requirements.txt
             infra/injector/requirements.txt
+            infra/orchestrator/requirements.txt
       - name: Install Python dependencies
-        run: python -m pip install -r requirements-dev.txt -r harness/requirements.txt -r infra/injector/requirements.txt
+        run: python -m pip install -r requirements-dev.txt -r harness/requirements.txt -r infra/injector/requirements.txt -r infra/orchestrator/requirements.txt
       - name: Lint Python
-        run: ruff check harness infra/injector/src infra/collector/src
+        run: ruff check harness experiments infra/injector/src infra/collector/src infra/orchestrator/src infra/validator/src
       - name: Run tests
-        run: python -m pytest -q infra/injector/src/test_injector.py
+        run: python -m pytest -q infra/injector/src/test_injector.py infra/orchestrator/src/test_treatment_boundaries.py infra/validator/src/test_validation_reports.py experiments
+      - name: Check retrieval corpus split identities
+        run: python experiments/check_knowledge_leakage.py
 
-  publish-injector:
-    name: Build and publish injector image
+  policies:
+    name: Treatment image and policy tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build treatment image
+        run: docker build --file infra/orchestrator/Dockerfile --tag drift-treatment:local .
+      - name: Verify policy tests without network access
+        run: make policy-test
+      - name: Reject known-bad inputs with installed static validators
+        run: docker run --rm --network none --entrypoint python drift-treatment:local /app/validator/src/smoke_validation.py
+
+  publish-images:
+    name: Build and publish runtime images
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [terraform, python]
+    needs: [terraform, python, policies]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -82,3 +97,9 @@ jobs:
           image="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-injector:$IMAGE_TAG"
           docker build --file infra/injector/Dockerfile --tag "$image" .
           docker push "$image"
+          collector_image="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:$IMAGE_TAG"
+          docker build --file infra/collector/Dockerfile --tag "$collector_image" .
+          docker push "$collector_image"
+          worker_image="$account_id.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-treatment-worker:$IMAGE_TAG"
+          docker build --file infra/orchestrator/Dockerfile --tag "$worker_image" .
+          docker push "$worker_image"
