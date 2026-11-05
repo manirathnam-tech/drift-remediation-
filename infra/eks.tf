@@ -63,6 +63,12 @@ module "eks" {
       kubernetes_groups = ["drift-collector"]
       type              = "STANDARD"
     }
+
+    drift_baseline = {
+      principal_arn     = aws_iam_role.baseline_lambda.arn
+      kubernetes_groups = ["drift-baseline"]
+      type              = "STANDARD"
+    }
   }
 
   addons = {
