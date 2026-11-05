@@ -28,11 +28,13 @@ Messages that fail processing are retried by SQS and move to
 
 ## Provision and load the retrieval corpus
 
-Terraform creates an S3 Vectors bucket and index, a Bedrock Knowledge Base,
-its restricted service role, and an S3 data source. It uploads the curated
-Markdown files from `infra/orchestrator/knowledge_base/` into the private
-golden-manifest bucket. After Terraform creates the data source, ingest the
-corpus once from an operator shell:
+Terraform manages a Bedrock managed Knowledge Base with service-managed
+embeddings and a managed S3 connector. It uploads the curated Markdown files
+from `infra/orchestrator/knowledge_base/` into the private golden-manifest
+bucket. The previous S3 Vectors bucket and index remain tracked while the
+transition is validated, but the active Knowledge Base does not use them. After
+Terraform creates or updates the data source, ingest the corpus from an
+operator shell:
 
 ```sh
 aws bedrock-agent start-ingestion-job \

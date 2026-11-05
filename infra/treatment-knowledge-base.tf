@@ -1,17 +1,19 @@
 data "aws_partition" "treatment_knowledge" {}
 data "aws_caller_identity" "treatment_knowledge" {}
 
-variable "treatment_knowledge_base_embedding_dimensions" {
-  description = "Titan Text Embeddings V2 dimensions used by the treatment knowledge base."
-  type        = number
-  default     = 1024
+resource "aws_s3_object" "treatment_knowledge" {
+  for_each = fileset("${path.module}/orchestrator/knowledge_base", "*.md")
 
-  validation {
-    condition     = contains([256, 512, 1024], var.treatment_knowledge_base_embedding_dimensions)
-    error_message = "Titan Text Embeddings V2 dimensions must be 256, 512, or 1024."
-  }
+  bucket       = aws_s3_bucket.golden_manifests.id
+  key          = "knowledge-base/${each.value}"
+  source       = "${path.module}/orchestrator/knowledge_base/${each.value}"
+  content_type = "text/markdown"
+  etag         = filemd5("${path.module}/orchestrator/knowledge_base/${each.value}")
 }
 
+# These S3 Vectors resources already exist in Terraform state. Keep them
+# managed during the switch back to the working managed Knowledge Base so
+# this change does not delete their stored vectors or index.
 resource "aws_s3vectors_vector_bucket" "treatment_knowledge" {
   vector_bucket_name = "drift-thesis-treatment-${data.aws_caller_identity.treatment_knowledge.account_id}"
   force_destroy      = true
@@ -25,22 +27,12 @@ resource "aws_s3vectors_index" "treatment_knowledge" {
   index_name         = "drift-treatment-knowledge"
   vector_bucket_name = aws_s3vectors_vector_bucket.treatment_knowledge.vector_bucket_name
   data_type          = "float32"
-  dimension          = var.treatment_knowledge_base_embedding_dimensions
+  dimension          = 1024
   distance_metric    = "cosine"
 
   metadata_configuration {
     non_filterable_metadata_keys = ["AMAZON_BEDROCK_TEXT", "AMAZON_BEDROCK_METADATA"]
   }
-}
-
-resource "aws_s3_object" "treatment_knowledge" {
-  for_each = fileset("${path.module}/orchestrator/knowledge_base", "*.md")
-
-  bucket       = aws_s3_bucket.golden_manifests.id
-  key          = "knowledge-base/${each.value}"
-  source       = "${path.module}/orchestrator/knowledge_base/${each.value}"
-  content_type = "text/markdown"
-  etag         = filemd5("${path.module}/orchestrator/knowledge_base/${each.value}")
 }
 
 resource "aws_iam_role" "treatment_knowledge_base" {
@@ -75,11 +67,6 @@ resource "aws_iam_role_policy" "treatment_knowledge_base" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["bedrock:InvokeModel"]
-        Resource = "arn:${data.aws_partition.treatment_knowledge.partition}:bedrock:ap-southeast-2::foundation-model/amazon.titan-embed-text-v2:0"
-      },
-      {
-        Effect   = "Allow"
         Action   = ["s3:ListBucket"]
         Resource = aws_s3_bucket.golden_manifests.arn
         Condition = {
@@ -93,51 +80,20 @@ resource "aws_iam_role_policy" "treatment_knowledge_base" {
         Action   = ["s3:GetObject"]
         Resource = "${aws_s3_bucket.golden_manifests.arn}/knowledge-base/*"
       },
-      {
-        Effect = "Allow"
-        Action = [
-          "s3vectors:PutVectors",
-          "s3vectors:GetVectors",
-          "s3vectors:DeleteVectors",
-          "s3vectors:QueryVectors",
-          "s3vectors:GetIndex",
-        ]
-        Resource = aws_s3vectors_index.treatment_knowledge.index_arn
-      },
-      {
-        Effect   = "Allow"
-        Action   = ["s3vectors:ListIndexes"]
-        Resource = aws_s3vectors_vector_bucket.treatment_knowledge.vector_bucket_arn
-      },
     ]
   })
 }
 
 resource "aws_bedrockagent_knowledge_base" "treatment" {
   name        = "drift-thesis-treatment"
-  description = "Curated DRIFT taxonomy and validation evidence."
+  description = "Curated DRIFT taxonomy and validation evidence with service-managed embeddings."
   role_arn    = aws_iam_role.treatment_knowledge_base.arn
 
   knowledge_base_configuration {
-    type = "VECTOR"
+    type = "MANAGED"
 
-    vector_knowledge_base_configuration {
-      embedding_model_arn = "arn:${data.aws_partition.treatment_knowledge.partition}:bedrock:ap-southeast-2::foundation-model/amazon.titan-embed-text-v2:0"
-
-      embedding_model_configuration {
-        bedrock_embedding_model_configuration {
-          dimensions          = var.treatment_knowledge_base_embedding_dimensions
-          embedding_data_type = "FLOAT32"
-        }
-      }
-    }
-  }
-
-  storage_configuration {
-    type = "S3_VECTORS"
-
-    s3_vectors_configuration {
-      index_arn = aws_s3vectors_index.treatment_knowledge.index_arn
+    managed_knowledge_base_configuration {
+      embedding_model_type = "MANAGED"
     }
   }
 
@@ -146,25 +102,32 @@ resource "aws_bedrockagent_knowledge_base" "treatment" {
 }
 
 resource "aws_bedrockagent_data_source" "treatment" {
-  name              = "drift-thesis-treatment-corpus"
-  knowledge_base_id = aws_bedrockagent_knowledge_base.treatment.id
+  name                 = "drift-thesis-treatment-corpus"
+  knowledge_base_id    = aws_bedrockagent_knowledge_base.treatment.id
+  data_deletion_policy = "DELETE"
 
   data_source_configuration {
-    type = "S3"
+    type = "MANAGED_KNOWLEDGE_BASE_CONNECTOR"
 
-    s3_configuration {
-      bucket_arn         = aws_s3_bucket.golden_manifests.arn
-      inclusion_prefixes = ["knowledge-base/"]
-    }
-  }
+    managed_knowledge_base_connector_configuration {
+      connector_parameters = jsonencode({
+        type    = "S3"
+        version = "1"
+        connectionConfiguration = {
+          bucketName           = aws_s3_bucket.golden_manifests.bucket
+          bucketOwnerAccountId = data.aws_caller_identity.treatment_knowledge.account_id
+        }
+        aclEnabled = false
+        filterConfiguration = {
+          inclusionPrefixes      = ["knowledge-base/"]
+          maxFileSizeInMegaBytes = "500"
+        }
+      })
 
-  vector_ingestion_configuration {
-    chunking_configuration {
-      chunking_strategy = "FIXED_SIZE"
-
-      fixed_size_chunking_configuration {
-        max_tokens         = 300
-        overlap_percentage = 10
+      media_extraction_configuration {
+        image_extraction_configuration {
+          image_extraction_status = "ENABLED"
+        }
       }
     }
   }
@@ -178,6 +141,6 @@ output "treatment_knowledge_base_id" {
 }
 
 output "treatment_knowledge_base_data_source_id" {
-  description = "S3 data source that must be ingested after corpus changes."
+  description = "Managed S3 connector that must be ingested after corpus changes."
   value       = aws_bedrockagent_data_source.treatment.data_source_id
 }

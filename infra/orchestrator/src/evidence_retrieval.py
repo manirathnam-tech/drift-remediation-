@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import os
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
@@ -59,7 +60,7 @@ def make_evidence_retriever(
                 knowledgeBaseId=selected_id,
                 retrievalQuery={"text": query},
                 retrievalConfiguration={
-                    "vectorSearchConfiguration": {"numberOfResults": MAX_RESULTS}
+                    "managedSearchConfiguration": {"numberOfResults": MAX_RESULTS}
                 },
             )
         except (BotoCoreError, ClientError, KeyError, TypeError) as exc:
@@ -79,7 +80,20 @@ def make_evidence_retriever(
             location = result.get("location", {})
             s3_location = location.get("s3Location", {}) if isinstance(location, dict) else {}
             uri = s3_location.get("uri", "") if isinstance(s3_location, dict) else ""
-            if not isinstance(uri, str) or not uri.startswith("s3://"):
+            if isinstance(uri, str) and uri.startswith("s3://"):
+                pass
+            elif isinstance(uri, str) and uri.startswith("https://"):
+                parsed_uri = urlsplit(uri)
+                host = parsed_uri.hostname or ""
+                if host.endswith(".amazonaws.com") and ".s3." in host:
+                    # Managed Knowledge Base retrieval may return an HTTPS
+                    # S3 location. Drop any query string before auditing it.
+                    uri = urlunsplit(
+                        (parsed_uri.scheme, parsed_uri.netloc, parsed_uri.path, "", "")
+                    )
+                else:
+                    uri = "bedrock-knowledge-base"
+            else:
                 uri = "bedrock-knowledge-base"
             source_id = hashlib.sha256((uri + "\0" + excerpt).encode("utf-8")).hexdigest()
             if source_id in seen:
