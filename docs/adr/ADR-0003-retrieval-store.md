@@ -1,5 +1,5 @@
 # ADR-0003: Use Bedrock Knowledge Bases with S3 Vectors for retrieval
-- Status: Accepted for this implementation
+- Status: Superseded by [ADR-0006](ADR-0006-managed-knowledge-base.md)
 - Date: 2026-10-31
 - Deciders: Project owner (implementation choice delegated to Codex)
 
