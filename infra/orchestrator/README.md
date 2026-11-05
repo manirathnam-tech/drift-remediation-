@@ -51,6 +51,7 @@ malicious, uncertain, or low-confidence cases are escalated. Nothing here has
 cluster-write permissions.
 
 See `docs/adr/` for the accepted implementation decisions. The worker uses
-static validation, S3 Vectors through Bedrock Knowledge Bases, and Nova Lite in
-Sydney. Its IAM role allows retrieval and inference on those resources only.
+static validation, a Bedrock managed Knowledge Base through its managed search
+API, and Nova Lite in Sydney. Its IAM role allows retrieval and inference on
+the configured resources only.
 Server-side Kubernetes dry-run remains a separate operator review step.
