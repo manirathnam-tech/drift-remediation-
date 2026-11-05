@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drift-baseline
+  namespace: argocd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drift-baseline
+  namespace: argocd
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: drift-baseline
+  template:
+    metadata:
+      labels:
+        app: drift-baseline
+    spec:
+      serviceAccountName: drift-baseline
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: baseline
+          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-baseline:replace-with-published-tag
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: AWS_REGION_NAME
+              value: ap-southeast-2
+            - name: BASELINE_QUEUE_URL
+              value: https://sqs.ap-southeast-2.amazonaws.com/218733194774/drift-thesis-baseline-events
+            - name: TREATMENT_AUDIT_TABLE
+              value: drift-thesis-treatment-audit
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

@@ -34,30 +34,24 @@ resource "aws_sqs_queue" "collector_dlq" {
   tags = local.common_tags
 }
 
-resource "aws_security_group" "drift_collector_lambda" {
-  name        = "${local.eks_cluster_name}-collector-lambda"
-  description = "Private egress for drift collector to EKS API and AWS services"
-  vpc_id      = module.vpc.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Lambda outbound connections constrained by IAM and VPC routing"
-  }
-
-  tags = merge(local.common_tags, { Name = "${local.eks_cluster_name}-collector-lambda" })
+resource "aws_sqs_queue" "collector_events" {
+  name                       = "drift-thesis-collector-events"
+  message_retention_seconds  = 1209600
+  visibility_timeout_seconds = 90
+  sqs_managed_sse_enabled    = true
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.collector_dlq.arn
+    maxReceiveCount     = 5
+  })
+  tags = merge(local.common_tags, { Name = "drift-thesis-collector-events", Consumer = "collector-pod" })
 }
 
-resource "aws_vpc_security_group_ingress_rule" "collector_to_eks_api" {
-  security_group_id            = module.eks.cluster_security_group_id
-  referenced_security_group_id = aws_security_group.drift_collector_lambda.id
-  description                  = "Allow drift collector access to EKS API for the Argo CD service proxy"
-  ip_protocol                  = "tcp"
-  from_port                    = 443
-  to_port                      = 443
-  tags                         = local.common_tags
+resource "aws_sqs_queue_redrive_allow_policy" "collector_dlq" {
+  queue_url = aws_sqs_queue.collector_dlq.url
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue"
+    sourceQueueArns   = [aws_sqs_queue.collector_events.arn]
+  })
 }
 
 resource "aws_iam_role" "drift_collector" {
@@ -88,11 +82,6 @@ resource "aws_iam_role_policy_attachment" "collector_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "collector_vpc_access" {
-  role       = aws_iam_role.drift_collector.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
 resource "aws_iam_role_policy" "collector_runtime" {
   name = "drift-thesis-collector-runtime"
   role = aws_iam_role.drift_collector.id
@@ -102,34 +91,8 @@ resource "aws_iam_role_policy" "collector_runtime" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["eks:DescribeCluster"]
-        Resource = "arn:${data.aws_partition.collector.partition}:eks:ap-southeast-2:${data.aws_caller_identity.collector.account_id}:cluster/${local.eks_cluster_name}"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "secretsmanager:DescribeSecret",
-          "secretsmanager:GetSecretValue"
-        ]
-        Resource = [
-          "arn:${data.aws_partition.collector.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.collector.account_id}:secret:drift-thesis-argocd-webhook-*",
-          "arn:${data.aws_partition.collector.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.collector.account_id}:secret:drift-thesis-argocd-collector-api-token-*"
-        ]
-      },
-      {
-        Effect   = "Allow"
-        Action   = ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem"]
-        Resource = aws_dynamodb_table.collector_idempotency.arn
-      },
-      {
-        Effect   = "Allow"
-        Action   = ["sns:Publish"]
-        Resource = aws_sns_topic.drift_events.arn
-      },
-      {
-        Effect   = "Allow"
         Action   = ["sqs:SendMessage"]
-        Resource = aws_sqs_queue.collector_dlq.arn
+        Resource = aws_sqs_queue.collector_events.arn
       }
     ]
   })
@@ -152,7 +115,7 @@ resource "aws_lambda_function" "drift_collector" {
   description      = "Authenticate Argo CD drift notifications, enrich DriftEvent v1, suppress duplicates and publish"
   role             = aws_iam_role.drift_collector.arn
   runtime          = "python3.12"
-  handler          = "collector.handler"
+  handler          = "collector_ingress.handler"
   filename         = data.archive_file.drift_collector.output_path
   source_code_hash = data.archive_file.drift_collector.output_base64sha256
   timeout          = 30
@@ -160,32 +123,16 @@ resource "aws_lambda_function" "drift_collector" {
 
   reserved_concurrent_executions = 2
 
-  vpc_config {
-    subnet_ids         = module.vpc.private_subnets
-    security_group_ids = [aws_security_group.drift_collector_lambda.id]
-  }
-
   environment {
     variables = {
-      AWS_REGION_NAME         = "ap-southeast-2"
-      EKS_CLUSTER_NAME        = module.eks.cluster_name
-      EKS_CLUSTER_ENDPOINT    = module.eks.cluster_endpoint
-      ARGOCD_APP_NAME         = "online-boutique"
-      ARGOCD_NAMESPACE        = "argocd"
-      ARGOCD_SERVICE_NAME     = "argocd-server"
-      WEBHOOK_SECRET_ARN      = "arn:${data.aws_partition.collector.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.collector.account_id}:secret:drift-thesis-argocd-webhook-*"
-      ARGOCD_TOKEN_SECRET_ARN = "arn:${data.aws_partition.collector.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.collector.account_id}:secret:drift-thesis-argocd-collector-api-token-*"
-      IDEMPOTENCY_TABLE       = aws_dynamodb_table.collector_idempotency.name
-      EVENT_TOPIC_ARN         = aws_sns_topic.drift_events.arn
-      FAILURE_QUEUE_URL       = aws_sqs_queue.collector_dlq.url
+      AWS_REGION_NAME     = "ap-southeast-2"
+      COLLECTOR_QUEUE_URL = aws_sqs_queue.collector_events.url
     }
   }
 
   depends_on = [
-    module.eks,
     aws_cloudwatch_log_group.drift_collector,
     aws_iam_role_policy_attachment.collector_basic_execution,
-    aws_iam_role_policy_attachment.collector_vpc_access,
     aws_iam_role_policy.collector_runtime
   ]
 
@@ -243,6 +190,11 @@ output "drift_collector_api_url" {
 output "drift_collector_dlq_url" {
   description = "SQS URL holding authenticated collector events that failed enrichment or publishing"
   value       = aws_sqs_queue.collector_dlq.url
+}
+
+output "drift_collector_queue_url" {
+  description = "Queue between the public webhook relay and in-cluster collector worker."
+  value       = aws_sqs_queue.collector_events.url
 }
 
 output "drift_collector_event_topic_arn" {

@@ -53,22 +53,12 @@ module "eks" {
     }
 
     drift_injector = {
-      principal_arn     = aws_iam_role.drift_injector.arn
+      principal_arn     = aws_iam_role.injector_pod_identity.arn
       kubernetes_groups = ["drift-injector"]
       type              = "STANDARD"
     }
 
-    drift_collector = {
-      principal_arn     = aws_iam_role.drift_collector.arn
-      kubernetes_groups = ["drift-collector"]
-      type              = "STANDARD"
-    }
 
-    drift_baseline = {
-      principal_arn     = aws_iam_role.baseline_lambda.arn
-      kubernetes_groups = ["drift-baseline"]
-      type              = "STANDARD"
-    }
   }
 
   addons = {

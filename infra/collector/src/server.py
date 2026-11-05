@@ -2,9 +2,11 @@
 
 import json
 import os
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from collector import handler
+from queue_worker import run_forever
 
 
 class CollectorHandler(BaseHTTPRequestHandler):
@@ -48,5 +50,6 @@ class CollectorHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    threading.Thread(target=run_forever, name="sqs-consumer", daemon=True).start()
     port = int(os.environ.get("PORT", "8080"))
     ThreadingHTTPServer(("0.0.0.0", port), CollectorHandler).serve_forever()

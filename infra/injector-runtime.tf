@@ -2,6 +2,15 @@ data "aws_dynamodb_table" "injector_runtime" {
   name = "drift-thesis-experiment-ledger"
 }
 
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-2.dynamodb"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = module.vpc.private_route_table_ids
+
+  tags = merge(local.common_tags, { Name = "drift-thesis-dynamodb" })
+}
+
 resource "aws_ecr_repository" "injector_runtime" {
   name                 = "drift-thesis-injector"
   image_tag_mutability = "IMMUTABLE"
