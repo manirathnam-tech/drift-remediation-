@@ -121,8 +121,6 @@ resource "aws_lambda_function" "drift_collector" {
   timeout          = 30
   memory_size      = 256
 
-  reserved_concurrent_executions = 2
-
   environment {
     variables = {
       AWS_REGION_NAME     = "ap-southeast-2"
