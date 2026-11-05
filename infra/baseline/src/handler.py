@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 import os
 import ssl
@@ -10,12 +9,9 @@ import time
 from datetime import UTC, datetime
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 import boto3
-from botocore.auth import SigV4QueryAuth
-from botocore.awsrequest import AWSRequest
 from botocore.exceptions import ClientError
 from rules import classify_event
 
@@ -52,28 +48,18 @@ def _audit(record: dict[str, Any]) -> None:
             raise
 
 
-def _eks_token(cluster_name: str) -> str:
-    credentials = boto3.Session().get_credentials()
-    if credentials is None:
-        raise BaselineError("AWS credentials are unavailable")
-    request = AWSRequest(
-        method="GET",
-        url=f"https://sts.{REGION}.amazonaws.com/?" + urlencode(
-            {"Action": "GetCallerIdentity", "Version": "2011-06-15"}
-        ),
-        headers={"x-k8s-aws-id": cluster_name},
-    )
-    SigV4QueryAuth(credentials.get_frozen_credentials(), "sts", REGION, expires=60).add_auth(
-        request
-    )
-    token = base64.urlsafe_b64encode(request.url.encode("utf-8")).decode("ascii")
-    return "k8s-aws-v1." + token.rstrip("=")
-
-
 def _request_sync(event: dict[str, Any]) -> dict[str, Any]:
-    endpoint = os.environ["EKS_ENDPOINT"].rstrip("/")
-    cluster_name = os.environ["EKS_CLUSTER_NAME"]
-    ca_pem = base64.b64decode(os.environ["EKS_CA_DATA"], validate=True).decode("ascii")
+    endpoint = os.environ.get(
+        "KUBERNETES_API_URL", "https://kubernetes.default.svc.cluster.local"
+    ).rstrip("/")
+    token_path = os.environ.get(
+        "KUBERNETES_TOKEN_FILE",
+        "/var/run/secrets/kubernetes.io/serviceaccount/token",
+    )
+    ca_path = os.environ.get(
+        "KUBERNETES_CA_FILE",
+        "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+    )
     path = (
         f"/apis/argoproj.io/v1alpha1/namespaces/{APP_NAMESPACE}"
         f"/applications/{APP_NAME}"
@@ -97,14 +83,18 @@ def _request_sync(event: dict[str, Any]) -> dict[str, Any]:
             }
         }
     }
-    context = ssl.create_default_context(cadata=ca_pem)
+    with open(token_path, encoding="utf-8") as token_file:
+        token = token_file.read().strip()
+    if not token:
+        raise BaselineError("Kubernetes service account token is empty")
+    tls_context = ssl.create_default_context(cafile=ca_path)
     headers = {
-        "Authorization": f"Bearer {_eks_token(cluster_name)}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/json",
     }
     try:
         get_request = Request(endpoint + path, headers=headers, method="GET")
-        with urlopen(get_request, timeout=10, context=context) as response:
+        with urlopen(get_request, timeout=10, context=tls_context) as response:
             body = response.read(MAX_BODY_BYTES + 1)
             if len(body) > MAX_BODY_BYTES:
                 raise BaselineError("Kubernetes API response exceeded the size limit")
@@ -134,7 +124,7 @@ def _request_sync(event: dict[str, Any]) -> dict[str, Any]:
             },
             method="PATCH",
         )
-        with urlopen(patch_request, timeout=10, context=context) as response:
+        with urlopen(patch_request, timeout=10, context=tls_context) as response:
             body = response.read(MAX_BODY_BYTES + 1)
             if len(body) > MAX_BODY_BYTES:
                 raise BaselineError("Kubernetes API response exceeded the size limit")

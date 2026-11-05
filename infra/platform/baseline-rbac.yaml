@@ -15,9 +15,9 @@ metadata:
   name: drift-baseline-application-sync
   namespace: argocd
 subjects:
-  - kind: Group
+  - kind: ServiceAccount
     name: drift-baseline
-    apiGroup: rbac.authorization.k8s.io
+    namespace: argocd
 roleRef:
   kind: Role
   name: drift-baseline-application-sync

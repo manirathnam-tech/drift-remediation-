@@ -1,48 +1,29 @@
-# DRIFT baseline control arm
+# Deterministic baseline arm
 
-The baseline arm classifies collector events with ruleset `baseline-rules-v1`
-in `src/rules.py`. Audit records preserve the collector detection, receipt, and
-reconciliation timestamps for later arm comparison. Unknown fields receive severity 2 so missing rules do not
-silently become benign. Replica-count changes are severity 1 because their
-availability impact is not measured by this classifier. Pod and Service
-annotations require review because controllers may use them to alter runtime
-behavior, routing, or exposure. The Lambda writes classification and sync-request
-records to the treatment audit table, then asks Argo CD to sync only the
-resources named by the event at the recorded Git revision.
-Audit record IDs are deterministic per event and stage, making repeated SQS
-deliveries idempotent in the append-only table.
+The baseline classifier uses the reviewed rules in `src/rules.py`, records
+classification and sync-request evidence in the treatment audit table, and
+asks Argo CD to sync only the resources named in the validated event. It does
+not use a model. The consumer is an EKS Deployment with replicas set to zero by
+default; scale it up only for an authorized experiment, then scale it back to
+zero. Its separate SQS queue is not attached to the shared SNS fanout.
 
-The sync request is written to the Application's top-level `operation` field.
-The Lambda checks both the current operation and operation status before
-submitting a new sync. Its security group permits HTTPS to the private VPC and
-the regional DynamoDB prefix list used by the audit table.
+The pod uses its Kubernetes service-account token to call the in-cluster API
+and an EKS Pod Identity association for DynamoDB and SQS. RBAC is limited to
+get/patch on the `online-boutique` Application in `argocd`. No Lambda VPC
+attachment is needed.
 
-Before requesting a sync, the handler checks that Argo CD still reports the
-event revision and that the application remains OutOfSync. It does not replace
-an active operation. Pruning is enabled only for the explicitly allowlisted
-resources named in the event, so desired deletions can also be reverted. The
-IAM principal is mapped to a Kubernetes group with `get` and `patch` access only to the
-`online-boutique` Application in the `argocd` namespace.
+Build and publish after Terraform creates the ECR repository:
 
-Terraform creates a separate baseline queue and a disabled SQS event source
-mapping. The queue is intentionally absent from the shared SNS fanout. Keep
-`baseline_consumer_enabled = false` until DRIFT-51 provides mutually exclusive
-arm selection for each trial. No AWS resources are created or changed by local
-checks.
-
-## Static checks
-
-```sh
-python3 -m py_compile infra/baseline/src/*.py
-ruff check infra/baseline/src
-python -m pytest -q infra/baseline/src/test_rules.py
-terraform fmt -check -recursive infra
-terraform -chdir=infra validate
+```bash
+bash scripts/publish-images.sh
 ```
 
-The rule validation contains 20 representative event cases plus checks that
-out-of-scope resources, non-OutOfSync resources, and timezone-free timestamps
-are rejected.
+Set the resulting immutable tag in
+`infra/platform/baseline-runtime.yaml`. Keep replicas at zero in the checked-in
+manifest. For a trial, apply the RBAC and runtime manifests, then scale the
+Deployment to one replica; return it to zero when the queue is drained.
 
-Terraform validation requires `terraform init -backend=false` first in a clean
-worktree.
+The classifier preserves detection, receipt, and reconciliation timestamps.
+Unknown changed fields receive severity 2, and missing evidence does not
+become benign. Messages are retried by SQS and sent to the DLQ after repeated
+failures. DynamoDB audit records are deterministic per event and stage.

@@ -111,11 +111,10 @@ run separately from a workstation with Kubernetes credentials. The worker has
 no EKS identity or write permission because Kubernetes authorizes dry-run with
 the same verbs as a real write.
 
-Before deployment, the remaining setup is to publish an immutable worker image,
-ingest the knowledge-base corpus, configure the ECS service desired count for
-the approved window, and ensure CI's GitHub OIDC role can be provisioned. The
-current AWS Organizations policy has previously denied creation of that OIDC
-provider.
+Before deployment, publish the immutable worker image from the workstation,
+ingest the knowledge-base corpus, and configure the ECS service desired count
+for the approved window. GitHub Actions remains AWS-free because this account's
+Organizations policy blocks GitHub OIDC provider creation.
 
 ## Local verification and worker controls
 

@@ -54,6 +54,11 @@ resource "aws_iam_role_policy" "collector_pod_runtime" {
       },
       {
         Effect   = "Allow"
+        Action   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+        Resource = aws_sqs_queue.collector_events.arn
+      },
+      {
+        Effect   = "Allow"
         Action   = ["sns:Publish"]
         Resource = aws_sns_topic.drift_events.arn
       },
