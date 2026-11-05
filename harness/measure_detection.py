@@ -3,16 +3,12 @@
 
 import csv
 import json
+import os
 import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
 
-IMAGE = (
-    "218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/"
-    "drift-thesis-injector@sha256:"
-    "12301d7bc5e832b30d307b8f89465b933fe2f8221b067a742a9dce2f14db2c32"
-)
 NAMESPACE = "online-boutique"
 APP = "online-boutique"
 COUNT = 20
@@ -75,6 +71,11 @@ def write_plot(rows):
 
 def main():
     RESULTS.mkdir(parents=True, exist_ok=True)
+    image = os.environ.get("DRIFT_INJECTOR_IMAGE", "").strip()
+    if not image:
+        raise SystemExit(
+            "Set DRIFT_INJECTOR_IMAGE to the published injector image tag or digest"
+        )
 
     records = [
         json.loads(line)
@@ -133,7 +134,7 @@ def main():
                         },
                         "containers": [{
                             "name": "injector",
-                            "image": IMAGE,
+                            "image": image,
                             "imagePullPolicy": "IfNotPresent",
                             "env": [
                                 {"name": "INSTANCE_ID", "value": record["id"]},
