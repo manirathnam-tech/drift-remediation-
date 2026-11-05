@@ -16,23 +16,6 @@ variable "github_app_private_key_secret_arn" {
   default     = ""
 }
 
-variable "github_repository_owner" {
-  description = "Approved GitOps repository owner for draft PRs."
-  type        = string
-  default     = "manirathnam-tech"
-}
-
-variable "github_repository_name" {
-  description = "Approved GitOps repository name for draft PRs."
-  type        = string
-  default     = "drift-gitops"
-}
-
-variable "github_base_branch" {
-  description = "GitOps branch that a reviewed draft PR targets."
-  type        = string
-  default     = "main"
-}
 
 output "github_app_pr_configuration_ready" {
   description = "Whether the optional GitHub App draft-PR configuration is present."
