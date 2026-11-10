@@ -25,5 +25,9 @@ Deployment to one replica; return it to zero when the queue is drained.
 
 The classifier preserves detection, receipt, and reconciliation timestamps.
 Unknown changed fields receive severity 2, and missing evidence does not
-become benign. Messages are retried by SQS and sent to the DLQ after repeated
-failures. DynamoDB audit records are deterministic per event and stage.
+become benign. Operational severity 2 follows the baseline hard-revert path.
+Critical severity 3 is also reverted, with a separate audit escalation for
+human security review. Adding or removing a Role, RoleBinding, or NetworkPolicy
+is classified as critical because the resulting security boundary requires
+review. Messages are retried by SQS and sent to the DLQ after repeated failures.
+DynamoDB audit records are deterministic per event and stage.

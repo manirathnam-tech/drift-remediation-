@@ -168,6 +168,16 @@ def _process_message(body: str) -> None:
         }
     )
 
+    if result["review_required"]:
+        _audit(
+            {
+                **common,
+                "stage": "human_review",
+                "verdict": "ESCALATE",
+                "decision": "security_review_required",
+            }
+        )
+
     response = _request_sync(event)
     if response.get("already_synced"):
         _audit(

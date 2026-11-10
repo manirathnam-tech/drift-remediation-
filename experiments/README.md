@@ -1,5 +1,23 @@
 # Offline treatment experiments
 
+`eval_baseline.py` replays the deterministic rules against the synthetic dev
+split without AWS or model calls. It applies each record's declared JSON Patch
+to the base object, passes the resulting live/target snapshots to the baseline
+classifier, and writes Markdown and JSON metrics. It reports class and severity
+metrics separately; it does not score intent or remediation decisions, which
+require authorization evidence outside the diff. Treat all results as
+synthetic-fixture development measurements, not observed incident performance.
+The JSON report includes each record's gold labels as context and the rule IDs
+and changed paths that produced the baseline output.
+
+```bash
+python3 experiments/eval_baseline.py \
+  --out experiments/results/baseline-dev.md
+```
+
+See [baseline scope inventory](baseline-scope.md) for the current allowlist
+coverage result and its limits.
+
 `eval_classify.py` scores saved classifier outputs against the development split.
 It does not invoke Bedrock. Predictions use JSONL rows with an instance `id` and
 the raw model JSON string in `raw_output`:

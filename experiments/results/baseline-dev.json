@@ -1,0 +1,1410 @@
+{
+  "synthetic_dev_records": 60,
+  "classified_records": 60,
+  "coverage": 1.0,
+  "classification_errors": [],
+  "record_results": [
+    {
+      "id": "SYN-20261022-0004",
+      "scenario_id": "BENIGN-S0-DEPLOYMENT-02",
+      "kind": "Deployment",
+      "name": "frontend",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "frontend",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "DEPLOYMENT_ANNOTATION",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0005",
+      "scenario_id": "BENIGN-S0-DEPLOYMENT-02",
+      "kind": "Deployment",
+      "name": "currencyservice",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 1,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "currencyservice",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "DEPLOYMENT_ANNOTATION",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0011",
+      "scenario_id": "BENIGN-S0-DEPLOYMENT-03",
+      "kind": "Deployment",
+      "name": "currencyservice",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 1,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "currencyservice",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "DEPLOYMENT_ANNOTATION",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0018",
+      "scenario_id": "BENIGN-S0-SERVICE-04",
+      "kind": "Service",
+      "name": "productcatalogservice",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "productcatalogservice",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "SERVICE_ANNOTATION",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0021",
+      "scenario_id": "BENIGN-S0-SERVICE-05",
+      "kind": "Service",
+      "name": "cartservice",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "cartservice",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "SERVICE_ANNOTATION",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0025",
+      "scenario_id": "BENIGN-S0-SERVICE-04",
+      "kind": "Service",
+      "name": "frontend-external",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "frontend-external",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "SERVICE_ANNOTATION",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0037",
+      "scenario_id": "BENIGN-S0-ROLE-02",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0040",
+      "scenario_id": "BENIGN-S0-ROLE-01",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0043",
+      "scenario_id": "BENIGN-S0-ROLE-01",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0046",
+      "scenario_id": "BENIGN-S0-ROLEBINDING-02",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0049",
+      "scenario_id": "BENIGN-S0-ROLEBINDING-05",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0054",
+      "scenario_id": "BENIGN-S0-ROLEBINDING-03",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0061",
+      "scenario_id": "BENIGN-S0-NETWORKPOLICY-02",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "intentional-benign",
+      "gold_expected_remediation_context": "accept-into-Git",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0068",
+      "scenario_id": "BENIGN-S0-NETWORKPOLICY-04",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0072",
+      "scenario_id": "BENIGN-S0-NETWORKPOLICY-04",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "benign",
+      "predicted_class": "operational",
+      "gold_severity": 0,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "metadata.annotations.experiment.drift/note",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0076",
+      "scenario_id": "OPERATIONAL-S1-DEPLOYMENT-02",
+      "kind": "Deployment",
+      "name": "cartservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "cartservice",
+          "path": "spec.template.spec.containers.*.image",
+          "rule_id": "CONTAINER_IMAGE",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0080",
+      "scenario_id": "OPERATIONAL-S1-DEPLOYMENT-01",
+      "kind": "Deployment",
+      "name": "cartservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "cartservice",
+          "path": "spec.template.spec.containers.*.image",
+          "rule_id": "CONTAINER_IMAGE",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0085",
+      "scenario_id": "OPERATIONAL-S1-DEPLOYMENT-05",
+      "kind": "Deployment",
+      "name": "cartservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "cartservice",
+          "path": "spec.template.spec.containers.*.image",
+          "rule_id": "CONTAINER_IMAGE",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0096",
+      "scenario_id": "OPERATIONAL-S1-SERVICE-05",
+      "kind": "Service",
+      "name": "productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "productcatalogservice",
+          "path": "spec.ports.*.name",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0101",
+      "scenario_id": "OPERATIONAL-S1-SERVICE-04",
+      "kind": "Service",
+      "name": "productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "productcatalogservice",
+          "path": "spec.ports.*.name",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0102",
+      "scenario_id": "OPERATIONAL-S1-SERVICE-02",
+      "kind": "Service",
+      "name": "productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "productcatalogservice",
+          "path": "spec.ports.*.name",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0114",
+      "scenario_id": "OPERATIONAL-S1-ROLE-04",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0118",
+      "scenario_id": "OPERATIONAL-S1-ROLE-04",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0119",
+      "scenario_id": "OPERATIONAL-S1-ROLE-05",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 1,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0121",
+      "scenario_id": "OPERATIONAL-S1-ROLEBINDING-02",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.name",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0131",
+      "scenario_id": "OPERATIONAL-S1-ROLEBINDING-03",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.name",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0133",
+      "scenario_id": "OPERATIONAL-S1-ROLEBINDING-01",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.name",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0138",
+      "scenario_id": "OPERATIONAL-S1-NETWORKPOLICY-02",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "spec.ingress.*.ports.*.port",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0139",
+      "scenario_id": "OPERATIONAL-S1-NETWORKPOLICY-03",
+      "kind": "NetworkPolicy",
+      "name": "allow-callers-to-productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-callers-to-productcatalogservice",
+          "path": "spec.ingress.*.ports.*.port",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0143",
+      "scenario_id": "OPERATIONAL-S1-NETWORKPOLICY-04",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 1,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "spec.ingress.*.ports.*.port",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0154",
+      "scenario_id": "OPERATIONAL-S2-DEPLOYMENT-03",
+      "kind": "Deployment",
+      "name": "frontend",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "frontend",
+          "path": "spec.replicas",
+          "rule_id": "REPLICA_COUNT",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0160",
+      "scenario_id": "OPERATIONAL-S2-DEPLOYMENT-04",
+      "kind": "Deployment",
+      "name": "currencyservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "currencyservice",
+          "path": "spec.replicas",
+          "rule_id": "REPLICA_COUNT",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0161",
+      "scenario_id": "OPERATIONAL-S2-DEPLOYMENT-02",
+      "kind": "Deployment",
+      "name": "frontend",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 1,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "frontend",
+          "path": "spec.replicas",
+          "rule_id": "REPLICA_COUNT",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0169",
+      "scenario_id": "OPERATIONAL-S2-SERVICE-05",
+      "kind": "Service",
+      "name": "frontend-external",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "frontend-external",
+          "path": "spec.ports.*.targetPort",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0173",
+      "scenario_id": "OPERATIONAL-S2-SERVICE-03",
+      "kind": "Service",
+      "name": "cartservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "cartservice",
+          "path": "spec.ports.*.targetPort",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0178",
+      "scenario_id": "OPERATIONAL-S2-SERVICE-05",
+      "kind": "Service",
+      "name": "cartservice",
+      "gold_class": "operational",
+      "predicted_class": "operational",
+      "gold_severity": 2,
+      "predicted_severity": 2,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": false,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "cartservice",
+          "path": "spec.ports.*.targetPort",
+          "rule_id": "UNMAPPED_FIELD",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0185",
+      "scenario_id": "OPERATIONAL-S2-ROLE-05",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        },
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0186",
+      "scenario_id": "OPERATIONAL-S2-ROLE-04",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        },
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0190",
+      "scenario_id": "OPERATIONAL-S2-ROLE-03",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        },
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*.verbs.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0201",
+      "scenario_id": "OPERATIONAL-S2-ROLEBINDING-02",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.namespace",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0202",
+      "scenario_id": "OPERATIONAL-S2-ROLEBINDING-05",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.namespace",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0203",
+      "scenario_id": "OPERATIONAL-S2-ROLEBINDING-04",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*.namespace",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0219",
+      "scenario_id": "OPERATIONAL-S2-NETWORKPOLICY-03",
+      "kind": "NetworkPolicy",
+      "name": "allow-callers-to-productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-callers-to-productcatalogservice",
+          "path": "spec.ingress.*.from.*",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0220",
+      "scenario_id": "OPERATIONAL-S2-NETWORKPOLICY-04",
+      "kind": "NetworkPolicy",
+      "name": "allow-callers-to-productcatalogservice",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-callers-to-productcatalogservice",
+          "path": "spec.ingress.*.from.*",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0222",
+      "scenario_id": "OPERATIONAL-S2-NETWORKPOLICY-05",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "operational",
+      "predicted_class": "critical",
+      "gold_severity": 2,
+      "predicted_severity": 3,
+      "gold_intent_context": "unintended",
+      "gold_expected_remediation_context": "revert",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "spec.ingress.*.from.*",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0228",
+      "scenario_id": "CRITICAL-S3-DEPLOYMENT-05",
+      "kind": "Deployment",
+      "name": "currencyservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "currencyservice",
+          "path": "spec.template.spec.containers.*.securityContext.privileged",
+          "rule_id": "CONTAINER_SECURITY_CONTEXT",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0230",
+      "scenario_id": "CRITICAL-S3-DEPLOYMENT-05",
+      "kind": "Deployment",
+      "name": "cartservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "cartservice",
+          "path": "spec.template.spec.containers.*.securityContext.privileged",
+          "rule_id": "CONTAINER_SECURITY_CONTEXT",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0239",
+      "scenario_id": "CRITICAL-S3-DEPLOYMENT-02",
+      "kind": "Deployment",
+      "name": "cartservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Deployment",
+          "name": "cartservice",
+          "path": "spec.template.spec.containers.*.securityContext.privileged",
+          "rule_id": "CONTAINER_SECURITY_CONTEXT",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0242",
+      "scenario_id": "CRITICAL-S3-SERVICE-04",
+      "kind": "Service",
+      "name": "frontend-external",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "frontend-external",
+          "path": "spec.type",
+          "rule_id": "SERVICE_TYPE",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0243",
+      "scenario_id": "CRITICAL-S3-SERVICE-03",
+      "kind": "Service",
+      "name": "cartservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "cartservice",
+          "path": "spec.type",
+          "rule_id": "SERVICE_TYPE",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0251",
+      "scenario_id": "CRITICAL-S3-SERVICE-01",
+      "kind": "Service",
+      "name": "productcatalogservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Service",
+          "name": "productcatalogservice",
+          "path": "spec.type",
+          "rule_id": "SERVICE_TYPE",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0256",
+      "scenario_id": "CRITICAL-S3-ROLE-02",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0259",
+      "scenario_id": "CRITICAL-S3-ROLE-04",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0266",
+      "scenario_id": "CRITICAL-S3-ROLE-04",
+      "kind": "Role",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "Role",
+          "name": "drift-observer",
+          "path": "spec.rules.*",
+          "rule_id": "RBAC_RULES",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0272",
+      "scenario_id": "CRITICAL-S3-ROLEBINDING-05",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0280",
+      "scenario_id": "CRITICAL-S3-ROLEBINDING-02",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0284",
+      "scenario_id": "CRITICAL-S3-ROLEBINDING-02",
+      "kind": "RoleBinding",
+      "name": "drift-observer",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "RoleBinding",
+          "name": "drift-observer",
+          "path": "spec.subjects.*",
+          "rule_id": "RBAC_SUBJECTS",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0286",
+      "scenario_id": "CRITICAL-S3-NETWORKPOLICY-05",
+      "kind": "NetworkPolicy",
+      "name": "allow-callers-to-productcatalogservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-callers-to-productcatalogservice",
+          "path": "spec.ingress.*.from.*.podSelector",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0292",
+      "scenario_id": "CRITICAL-S3-NETWORKPOLICY-03",
+      "kind": "NetworkPolicy",
+      "name": "allow-callers-to-productcatalogservice",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-callers-to-productcatalogservice",
+          "path": "spec.ingress.*.from.*.podSelector",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    },
+    {
+      "id": "SYN-20261022-0296",
+      "scenario_id": "CRITICAL-S3-NETWORKPOLICY-05",
+      "kind": "NetworkPolicy",
+      "name": "allow-cartservice-to-redis-cart",
+      "gold_class": "critical",
+      "predicted_class": "critical",
+      "gold_severity": 3,
+      "predicted_severity": 3,
+      "gold_intent_context": "malicious",
+      "gold_expected_remediation_context": "revert + escalate",
+      "predicted_review_required": true,
+      "rule_findings": [
+        {
+          "kind": "NetworkPolicy",
+          "name": "allow-cartservice-to-redis-cart",
+          "path": "spec.ingress.*.from.*.podSelector",
+          "rule_id": "NETWORK_POLICY",
+          "severity": 3
+        }
+      ]
+    }
+  ],
+  "class_accuracy_on_classified": 0.5,
+  "class_macro_f1_on_classified": 0.38888888888888884,
+  "class_confusion_matrix": {
+    "benign": {
+      "benign": 0,
+      "operational": 15,
+      "critical": 0
+    },
+    "operational": {
+      "benign": 0,
+      "operational": 15,
+      "critical": 15
+    },
+    "critical": {
+      "benign": 0,
+      "operational": 0,
+      "critical": 15
+    }
+  },
+  "severity_accuracy_on_classified": 0.4,
+  "severity_macro_f1_on_classified": 0.3232323232323232,
+  "severity_confusion_matrix": {
+    "0": {
+      "0": 0,
+      "1": 3,
+      "2": 12,
+      "3": 0
+    },
+    "1": {
+      "0": 0,
+      "1": 6,
+      "2": 3,
+      "3": 6
+    },
+    "2": {
+      "0": 0,
+      "1": 3,
+      "2": 3,
+      "3": 9
+    },
+    "3": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 15
+    }
+  },
+  "rule_finding_counts": {
+    "CONTAINER_IMAGE": 3,
+    "CONTAINER_SECURITY_CONTEXT": 3,
+    "DEPLOYMENT_ANNOTATION": 3,
+    "NETWORK_POLICY": 9,
+    "RBAC_RULES": 12,
+    "RBAC_SUBJECTS": 9,
+    "REPLICA_COUNT": 3,
+    "SERVICE_ANNOTATION": 3,
+    "SERVICE_TYPE": 3,
+    "UNMAPPED_FIELD": 15
+  },
+  "intent_metric": "not measured; the deterministic baseline does not infer intent",
+  "remediation_metric": "not scored; intent and authorization evidence are external to this rule output"
+}
