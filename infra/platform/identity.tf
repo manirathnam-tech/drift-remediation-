@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "external_secrets" {
           "secretsmanager:DescribeSecret",
           "secretsmanager:GetSecretValue"
         ]
-        Resource = "arn:${data.aws_partition.current.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.current.account_id}:secret:drift-gitops-deploy-key-*"
+        Resource = "arn:${data.aws_partition.current.partition}:secretsmanager:ap-southeast-2:${data.aws_caller_identity.current.account_id}:secret:drift-thesis-gitops-deploy-key-*"
       },
       {
         Effect = "Allow"
