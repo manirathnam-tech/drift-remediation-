@@ -1,4 +1,5 @@
 resource "aws_ecr_repository" "collector_runtime" {
+  force_delete         = true
   name                 = "drift-thesis-collector"
   image_tag_mutability = "IMMUTABLE"
 

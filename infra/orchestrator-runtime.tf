@@ -21,6 +21,7 @@ variable "treatment_worker_image_tag" {
 }
 
 resource "aws_ecr_repository" "treatment_worker" {
+  force_delete         = true
   name                 = "drift-thesis-treatment-worker"
   image_tag_mutability = "IMMUTABLE"
 
