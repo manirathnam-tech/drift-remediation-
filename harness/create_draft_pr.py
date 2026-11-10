@@ -21,6 +21,18 @@ def _required_env(name: str) -> str:
     return value
 
 
+def _safe_terminal_text(value: str) -> str:
+    """Keep proposal content readable without allowing terminal control sequences."""
+    return "".join(
+        character
+        if character in "\n\t" or character.isprintable()
+        else f"\\x{ord(character):02x}"
+        if ord(character) <= 0xFF
+        else f"\\u{ord(character):04x}"
+        for character in value
+    )
+
+
 def _load_routed_proposal(
     event_id: str,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
@@ -75,14 +87,20 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Revision: {event['revision']}")
     print(f"Decision: {proposal['decision']}")
     print(f"Severity: {proposal['classification']['severity']}")
-    print(f"Summary: {proposal['summary']}")
-    print(f"Justification: {proposal['classification']['justification']}")
-    print(f"Files: {', '.join(proposal['files'])}")
+    print(f"Summary: {_safe_terminal_text(proposal['summary'])}")
+    print(
+        "Justification: "
+        f"{_safe_terminal_text(proposal['classification']['justification'])}"
+    )
+    print(f"Files: {_safe_terminal_text(', '.join(proposal['files']))}")
     print(f"Patch SHA-256: {patch_sha}")
+    print("\nExact proposed patch (terminal control characters are escaped):")
+    print(_safe_terminal_text(proposal["patch"]))
+    print(f"\nPatch SHA-256: {patch_sha}")
     print("Validator checks:")
     for check, verdict in sorted(validator_report.get("checks", {}).items()):
         print(f"  {check}: {verdict}")
-    print(f"Approval reference: {args.approval_reference.strip()}")
+    print(f"Approval reference: {_safe_terminal_text(args.approval_reference.strip())}")
     print("This action pushes a branch and opens a draft PR. It does not merge or apply it.")
     if input("Type CREATE DRAFT PR to continue: ").strip() != "CREATE DRAFT PR":
         print("Cancelled; no GitHub changes were made.")
