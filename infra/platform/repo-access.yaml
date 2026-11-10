@@ -33,4 +33,4 @@ spec:
   data:
     - secretKey: privateKey
       remoteRef:
-        key: drift-gitops-deploy-key
+        key: drift-thesis-gitops-deploy-key
