@@ -29,17 +29,13 @@ spec:
           type: RuntimeDefault
       containers:
         - name: collector
-          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:replace-with-published-tag
+          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-collector:__IMAGE_TAG__
           ports:
             - name: http
               containerPort: 8080
           env:
             - name: AWS_REGION_NAME
               value: ap-southeast-2
-            - name: EKS_CLUSTER_NAME
-              value: drift-thesis-eks
-            - name: EKS_CLUSTER_ENDPOINT
-              value: https://1B53C09C0A6CFF62336A7C81EE1AE1C3.gr7.ap-southeast-2.eks.amazonaws.com
             - name: ARGOCD_APP_NAME
               value: online-boutique
             - name: ARGOCD_NAMESPACE
@@ -47,9 +43,9 @@ spec:
             - name: ARGOCD_SERVICE_NAME
               value: argocd-server
             - name: WEBHOOK_SECRET_ARN
-              value: arn:aws:secretsmanager:ap-southeast-2:218733194774:secret:drift-thesis-argocd-webhook-8VGWyc
+              value: __WEBHOOK_SECRET_ARN__
             - name: ARGOCD_TOKEN_SECRET_ARN
-              value: arn:aws:secretsmanager:ap-southeast-2:218733194774:secret:drift-thesis-argocd-collector-api-token-UEP3w2
+              value: __COLLECTOR_TOKEN_SECRET_ARN__
             - name: IDEMPOTENCY_TABLE
               value: drift-thesis-collector-idempotency
             - name: AUDIT_TABLE
@@ -61,7 +57,7 @@ spec:
             - name: COLLECTOR_QUEUE_URL
               value: https://sqs.ap-southeast-2.amazonaws.com/218733194774/drift-thesis-collector-events
           volumeMounts:
-            - name: eks-api-ca
+            - name: argocd-server-ca
               mountPath: /etc/drift-collector
               readOnly: true
           readinessProbe:
@@ -84,12 +80,10 @@ spec:
               cpu: 250m
               memory: 256Mi
       volumes:
-        - name: eks-api-ca
+        - name: argocd-server-ca
           configMap:
-            name: drift-eks-api-ca
+            name: drift-argocd-server-ca
             items:
-              - key: ca.crt
-                path: ca.crt
               - key: argocd.crt
                 path: argocd.crt
 ---

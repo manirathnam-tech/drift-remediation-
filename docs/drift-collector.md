@@ -4,6 +4,8 @@ The collector accepts Argo CD `OutOfSync` notifications at an HTTPS API Gateway 
 
 The collector worker runs in the `argocd` namespace and uses EKS Pod Identity for AWS access. It calls Argo CD with a dedicated API key account that can only `get` the `default/online-boutique` Application. Argo CD itself remains ClusterIP and has no public load balancer or ingress. The API Gateway Lambda has no VPC attachment and only has permission to send messages to the collector queue.
 
+The collector reaches Argo CD through its in-cluster service DNS name and uses the Argo CD server certificate mounted from the `drift-argocd-server-ca` ConfigMap. It does not call the EKS API directly and does not need the EKS endpoint or cluster CA in its environment.
+
 ## Deployment order
 
 The API URL and Argo API token are generated during deployment, so bootstrap in this order:
@@ -13,7 +15,7 @@ The API URL and Argo API token are generated during deployment, so bootstrap in 
 3. Generate a token for `drift-collector` using the Argo CD CLI. Supply it as the sensitive Terraform input `argocd_collector_api_token` for the platform configuration, and set `drift_collector_webhook_url` to the root output `drift_collector_api_url`. Apply platform Terraform again. The token is stored in Secrets Manager and Terraform state; state access must remain restricted.
 4. Publish and apply the collector image, confirm the ExternalSecret is Ready and the Argo account is configured, then send a test notification. Verify it reaches the collector SNS topic. Inspect queue and DLQ counts without printing secret values.
 
-The API Gateway endpoint is internet reachable, but the only accepted route is `POST /events`, authenticated by the shared secret header and protected by API Gateway throttling. Rotate the webhook secret in Secrets Manager and Terraform together if it is exposed. Do not put either token or webhook secret in Git.
+The API Gateway endpoint is internet reachable, but the only accepted route is `POST /events`, authenticated by the shared secret header and protected by API Gateway throttling. The in-cluster HTTP receiver also caps request bodies at 128 KiB and rejects requests without a valid `Content-Length`. The SQS consumer restarts its polling loop after unexpected AWS or worker errors. Rotate the webhook secret in Secrets Manager and Terraform together if it is exposed. Do not put either token or webhook secret in Git.
 
 ## Event timestamps
 
