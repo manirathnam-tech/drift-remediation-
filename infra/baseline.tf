@@ -26,6 +26,7 @@ resource "aws_sqs_queue_redrive_allow_policy" "baseline_dead_letter" {
 }
 
 resource "aws_ecr_repository" "baseline_runtime" {
+  force_delete         = true
   name                 = "drift-thesis-baseline"
   image_tag_mutability = "IMMUTABLE"
   encryption_configuration { encryption_type = "AES256" }

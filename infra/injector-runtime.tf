@@ -12,6 +12,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
 }
 
 resource "aws_ecr_repository" "injector_runtime" {
+  force_delete         = true
   name                 = "drift-thesis-injector"
   image_tag_mutability = "IMMUTABLE"
 
