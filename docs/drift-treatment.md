@@ -28,13 +28,14 @@ Messages that fail processing are retried by SQS and move to
 
 ## Provision and load the retrieval corpus
 
-Terraform manages a Bedrock managed Knowledge Base with service-managed
-embeddings and a managed S3 connector. It uploads the curated Markdown files
-from `infra/orchestrator/knowledge_base/` into the private golden-manifest
-bucket. The previous S3 Vectors bucket and index remain tracked while the
-transition is validated, but the active Knowledge Base does not use them. After
-Terraform creates or updates the data source, ingest the corpus from an
-operator shell:
+Terraform manages a Bedrock managed Knowledge Base with a custom Amazon Titan
+Text Embeddings V2 model (`amazon.titan-embed-text-v2:0`, 1024 dimensions,
+float32) and a managed S3 connector. It uploads the curated Markdown files from
+`infra/orchestrator/knowledge_base/` into the private golden-manifest bucket.
+The Knowledge Base role is limited to reading that corpus and invoking the
+selected embedding model. Changing between managed and custom embedding types
+requires creating a new Knowledge Base. After Terraform creates the Knowledge
+Base and data source, ingest the corpus from an operator shell:
 
 ```sh
 aws bedrock-agent start-ingestion-job \

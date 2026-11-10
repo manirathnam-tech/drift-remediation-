@@ -1,6 +1,6 @@
 # ADR-0006: Use a managed Bedrock Knowledge Base
 
-- Status: Accepted
+- Status: Superseded by [ADR-0008](ADR-0008-titan-custom-embedding.md)
 - Date: 2026-11-05
 - Deciders: Project owner (implementation choice delegated to Codex)
 
