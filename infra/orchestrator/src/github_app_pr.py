@@ -110,7 +110,6 @@ def _installation_token() -> str:
             "permissions": {
                 "contents": "write",
                 "pull_requests": "write",
-                "issues": "write",
             },
         },
     )
