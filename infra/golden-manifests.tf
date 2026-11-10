@@ -1,7 +1,9 @@
 data "aws_caller_identity" "golden_manifests" {}
 
 resource "aws_s3_bucket" "golden_manifests" {
-  bucket = "drift-thesis-golden-${data.aws_caller_identity.golden_manifests.account_id}"
+  # A future Terraform destroy permanently deletes every object in this bucket.
+  force_destroy = true
+  bucket        = "drift-thesis-golden-${data.aws_caller_identity.golden_manifests.account_id}"
 
   tags = merge(local.common_tags, {
     Name = "drift-thesis-golden-manifests"

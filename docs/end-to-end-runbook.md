@@ -43,6 +43,17 @@ Research data and deployment credentials were retained for a possible rebuild:
 The commands in “Before a demonstration” and later sections are for a future
 rebuild. They will fail until infrastructure is deliberately provisioned again.
 
+## Future teardown and stored data
+
+The golden-manifests bucket is configured with Terraform `force_destroy`. A
+future `make down` permanently deletes all objects in that bucket, including
+golden manifests, Knowledge Base source files, and workflow inputs and state.
+Before teardown, back up the current bucket contents outside AWS and verify the
+backup checksums. A successful Terraform apply after setting `force_destroy` is
+required before a later destroy will use the setting. Recheck the backup after
+each demonstration because new workflow data may have been written since the
+previous archive.
+
 ## Before a demonstration
 
 Use WSL for AWS, Terraform, and Kubernetes commands. A renewed AWS login does
