@@ -6,6 +6,8 @@ crash.log
 crash.*.log
 infra/injector/build/
 infra/collector/collector.zip
+infra/orchestrator/workflow-ingest.zip
+infra/platform/terraform.tfvars
 __pycache__/
 .pytest_cache/
 .ruff_cache/
