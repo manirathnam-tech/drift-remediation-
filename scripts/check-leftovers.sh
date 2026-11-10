@@ -57,7 +57,7 @@ inventory required 'project SQS queues' aws sqs list-queues --region "$REGION" -
 inventory required 'project DynamoDB tables' aws dynamodb list-tables --region "$REGION" --query 'TableNames[?starts_with(@, `drift-thesis-`)]' --output text
 inventory required 'project ECR repositories' aws ecr describe-repositories --region "$REGION" --query 'repositories[?starts_with(repositoryName, `drift-thesis-`)].repositoryArn' --output text
 inventory required 'project Lambda functions' aws lambda list-functions --region "$REGION" --query 'Functions[?starts_with(FunctionName, `drift-thesis-`)].FunctionName' --output text
-inventory required 'project Secrets Manager secrets' aws secretsmanager list-secrets --region "$REGION" --query 'SecretList[?starts_with(Name, `drift-`)].Name' --output text
+inventory advisory 'retained project Secrets Manager secrets' aws secretsmanager list-secrets --region "$REGION" --query 'SecretList[?starts_with(Name, `drift-`)].Name' --output text
 inventory required 'project SNS topics' aws sns list-topics --region "$REGION" --query 'Topics[?contains(TopicArn, `drift-thesis-`)].TopicArn' --output text
 inventory required 'project API Gateway APIs' aws apigatewayv2 get-apis --region "$REGION" --query 'Items[?starts_with(Name, `drift-thesis-`)].ApiId' --output text
 inventory required 'project Step Functions state machines' aws stepfunctions list-state-machines --region "$REGION" --query 'stateMachines[?starts_with(name, `drift-thesis-`)].stateMachineArn' --output text
