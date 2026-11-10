@@ -12,6 +12,13 @@ account="$(aws sts get-caller-identity --query Account --output text)"
 # Destroy Kubernetes add-ons before EKS, while the API and kubeconfig still work.
 if cluster_status="$(aws eks describe-cluster --name drift-thesis-eks --region "$REGION" --query 'cluster.status' --output text 2>&1)"; then
   terraform -chdir="$ROOT/infra/platform" init -input=false
+  # Keep secret metadata and values available across demo sessions. The next
+  # startup imports these objects into its fresh platform state.
+  for address in argocd_webhook argocd_collector_api_token; do
+    if terraform -chdir="$ROOT/infra/platform" state list | grep -Fq "aws_secretsmanager_secret.$address"; then
+      terraform -chdir="$ROOT/infra/platform" state rm "aws_secretsmanager_secret.$address"
+    fi
+  done
   terraform -chdir="$ROOT/infra/platform" destroy -input=false -auto-approve
 elif [[ "$cluster_status" == *ResourceNotFoundException* ]]; then
   echo "EKS cluster is absent; skipping platform Helm teardown."
