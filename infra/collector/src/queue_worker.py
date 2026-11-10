@@ -60,7 +60,8 @@ def run_forever() -> None:
             time.sleep(0)
 
 
-if __name__ == "__main__":
+def run_supervised() -> None:
+    """Restart the consumer loop after an unexpected AWS or worker failure."""
     while True:
         try:
             run_forever()
@@ -74,3 +75,7 @@ if __name__ == "__main__":
                 )
             )
             time.sleep(5)
+
+
+if __name__ == "__main__":
+    run_supervised()
