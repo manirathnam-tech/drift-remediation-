@@ -10,3 +10,9 @@ Cost Explorer is account-wide and may include charges outside this project. It c
 | 20261022T013427Z | 2026-10-22T01:34:27Z | — | In progress | Pending Cost Explorer |
 
 | 20261022T013427Z | 2026-10-22T01:34:27Z | 2026-10-22T01:55:49Z | Up completed in 1282 seconds | Pending Cost Explorer |
+
+| 20261109T133003Z | 2026-11-09T13:30:03Z | — | In progress | Pending Cost Explorer |
+
+| 20261109T133003Z | 2026-11-09T13:30:03Z | 2026-11-09T15:12:18Z | Up completed in 6135 seconds | Pending Cost Explorer |
+
+Cost Explorer observation for 2026-11-09 through 2026-11-11 (end exclusive): -0.0000000240 USD account-level UnblendedCost total. Costs are delayed and may include non-project charges; use this as a date-range observation, not exact per-session attribution.
