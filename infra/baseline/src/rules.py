@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import fnmatch
+import itertools
+import json
 import re
 from datetime import datetime
 from typing import Any
@@ -105,18 +107,152 @@ def _matches_path(path: str, pattern: str) -> bool:
     )
 
 
-def _rule_for(kind: str, path: str) -> tuple[int, str, str]:
-    if kind == "Role" and (path == "rules" or path.startswith("rules.")):
+def _role_rules_expand(live: Any, target: Any) -> bool:
+    """Return whether live Role rules grant permissions absent from the target."""
+    if not isinstance(live, dict):
+        return False
+    if not isinstance(target, dict):
+        return True
+    live_spec = live.get("spec", live)
+    target_spec = target.get("spec", target)
+    if not isinstance(live_spec, dict) or not isinstance(target_spec, dict):
+        return True
+    live_rules = live_spec.get("rules", [])
+    target_rules = target_spec.get("rules", [])
+    if not isinstance(live_rules, list) or not isinstance(target_rules, list):
+        return True
+
+    groups = {"__drift_other_api_group__"}
+    resources = {"__drift_other_resource__"}
+    verbs = {"__drift_other_verb__"}
+    names = {"__drift_other_name__"}
+    for rule in live_rules + target_rules:
+        if not isinstance(rule, dict):
+            return True
+        if rule.get("nonResourceURLs"):
+            return True
+        for field, domain in (
+            ("apiGroups", groups),
+            ("resources", resources),
+            ("verbs", verbs),
+        ):
+            values = rule.get(field)
+            if not isinstance(values, list) or not values:
+                return True
+            if any(not isinstance(value, str) for value in values):
+                return True
+            domain.update(value for value in values if value != "*")
+        resource_names = rule.get("resourceNames", [])
+        if not isinstance(resource_names, list) or any(
+            not isinstance(value, str) for value in resource_names
+        ):
+            return True
+        names.update(resource_names)
+
+    candidates = itertools.product(groups, resources, verbs, names)
+    if len(groups) * len(resources) * len(verbs) * len(names) > 100_000:
+        return True
+
+    def permits(
+        rules: list[dict[str, Any]],
+        api_group: str,
+        resource: str,
+        verb: str,
+        name: str,
+    ) -> bool:
+        for rule in rules:
+            resource_names = rule.get("resourceNames", [])
+            if resource_names and name not in resource_names:
+                continue
+            if all(
+                "*" in rule[field] or value in rule[field]
+                for field, value in (
+                    ("apiGroups", api_group),
+                    ("resources", resource),
+                    ("verbs", verb),
+                )
+            ):
+                return True
+        return False
+
+    return any(
+        permits(live_rules, *candidate) and not permits(target_rules, *candidate)
+        for candidate in candidates
+    )
+
+
+def _role_binding_expands(live: Any, target: Any) -> bool:
+    """Return whether a live RoleBinding grants a role to additional subjects."""
+    if not isinstance(live, dict):
+        return False
+    if not isinstance(target, dict):
+        return True
+    live_spec = live.get("spec", live)
+    target_spec = target.get("spec", target)
+    if not isinstance(live_spec, dict) or not isinstance(target_spec, dict):
+        return True
+    if live_spec.get("roleRef") != target_spec.get("roleRef"):
+        return True
+    live_subjects = live_spec.get("subjects", [])
+    target_subjects = target_spec.get("subjects", [])
+    if not isinstance(live_subjects, list) or not isinstance(target_subjects, list):
+        return True
+    try:
+        live_set = {json.dumps(item, sort_keys=True) for item in live_subjects}
+        target_set = {json.dumps(item, sort_keys=True) for item in target_subjects}
+    except (TypeError, ValueError):
+        return True
+    return bool(live_set - target_set)
+
+
+def _rule_for(
+    kind: str,
+    path: str,
+    live: Any = None,
+    target: Any = None,
+) -> tuple[int, str, str]:
+    if path == "$object":
+        if kind in {"Role", "RoleBinding", "NetworkPolicy"}:
+            return (
+                3,
+                "SECURITY_OBJECT_PRESENCE",
+                "security policy or authority object added or removed",
+            )
+        return 2, "RESOURCE_PRESENCE", "resource added or removed; impact is not measured"
+    if kind == "Deployment" and (
+        path == "metadata.annotations" or path.startswith("metadata.annotations.")
+    ):
+        return 1, "DEPLOYMENT_ANNOTATION", "deployment metadata changed"
+    if kind == "Service" and (
+        path == "metadata.annotations" or path.startswith("metadata.annotations.")
+    ):
+        return 2, "SERVICE_ANNOTATION", "service annotation may affect exposure or routing"
+    if kind == "Role" and (
+        path == "rules"
+        or path.startswith(("rules.", "spec.rules."))
+        or path == "spec.rules"
+    ):
+        if path.startswith("spec.rules"):
+            if _role_rules_expand(live, target):
+                return 3, "RBAC_RULES", "effective role permissions expanded"
+            return 1, "RBAC_RULES", "effective role permissions narrowed or unchanged"
         return 3, "RBAC_RULES", "effective role permissions changed"
     if kind == "RoleBinding" and (
-        path in {"subjects", "roleRef"}
-        or path.startswith(("subjects.", "roleRef."))
+        path in {"subjects", "roleRef", "spec.subjects", "spec.roleRef"}
+        or path.startswith(
+            ("subjects.", "roleRef.", "spec.subjects.", "spec.roleRef.")
+        )
     ):
         rule_id = (
             "RBAC_SUBJECTS"
-            if path == "subjects" or path.startswith("subjects.")
+            if path in {"subjects", "spec.subjects"}
+            or path.startswith(("subjects.", "spec.subjects."))
             else "RBAC_ROLE_REF"
         )
+        if path.startswith("spec."):
+            if _role_binding_expands(live, target):
+                return 3, rule_id, "role binding authority expanded"
+            return 1, rule_id, "role binding authority narrowed or unchanged"
         return 3, rule_id, "role binding authority changed"
     if kind == "NetworkPolicy" and (path == "spec" or path.startswith("spec.")):
         return 3, "NETWORK_POLICY", "network isolation policy changed"
@@ -200,7 +336,7 @@ def classify_event(event: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("resource has no comparable changed fields")
         findings = []
         for path in paths:
-            severity, rule_id, rationale = _rule_for(kind, path)
+            severity, rule_id, rationale = _rule_for(kind, path, live, target)
             findings.append(
                 {
                     "path": path,
@@ -233,6 +369,6 @@ def classify_event(event: dict[str, Any]) -> dict[str, Any]:
         "severity": severity,
         "drift_class": drift_class,
         "decision": "hard_revert",
-        "review_required": severity >= 2,
+        "review_required": severity == 3,
         "resources": results,
     }

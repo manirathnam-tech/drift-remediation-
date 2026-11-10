@@ -148,11 +148,11 @@ CASES = [
     ),
     pytest.param(
         "Deployment", "cartservice", None, _deployment(),
-        2, "UNMAPPED_FIELD", id="resource-created-live-missing",
+        2, "RESOURCE_PRESENCE", id="resource-created-live-missing",
     ),
     pytest.param(
         "Service", "frontend-external", _service(), None,
-        2, "UNMAPPED_FIELD", id="resource-deleted-from-target",
+        2, "RESOURCE_PRESENCE", id="resource-deleted-from-target",
     ),
     pytest.param(
         "Service", "frontend-external", _service(),
