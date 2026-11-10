@@ -1,6 +1,10 @@
 data "aws_partition" "treatment_knowledge" {}
 data "aws_caller_identity" "treatment_knowledge" {}
 
+locals {
+  treatment_embedding_model_arn = "arn:${data.aws_partition.treatment_knowledge.partition}:bedrock:ap-southeast-2::foundation-model/amazon.titan-embed-text-v2:0"
+}
+
 resource "aws_s3_object" "treatment_knowledge" {
   for_each = fileset("${path.module}/orchestrator/knowledge_base", "*.md")
 
@@ -9,30 +13,6 @@ resource "aws_s3_object" "treatment_knowledge" {
   source       = "${path.module}/orchestrator/knowledge_base/${each.value}"
   content_type = "text/markdown"
   etag         = filemd5("${path.module}/orchestrator/knowledge_base/${each.value}")
-}
-
-# These S3 Vectors resources already exist in Terraform state. Keep them
-# managed during the switch back to the working managed Knowledge Base so
-# this change does not delete their stored vectors or index.
-resource "aws_s3vectors_vector_bucket" "treatment_knowledge" {
-  vector_bucket_name = "drift-thesis-treatment-${data.aws_caller_identity.treatment_knowledge.account_id}"
-  force_destroy      = true
-
-  tags = merge(local.common_tags, {
-    Name = "drift-thesis-treatment-knowledge"
-  })
-}
-
-resource "aws_s3vectors_index" "treatment_knowledge" {
-  index_name         = "drift-treatment-knowledge"
-  vector_bucket_name = aws_s3vectors_vector_bucket.treatment_knowledge.vector_bucket_name
-  data_type          = "float32"
-  dimension          = 1024
-  distance_metric    = "cosine"
-
-  metadata_configuration {
-    non_filterable_metadata_keys = ["AMAZON_BEDROCK_TEXT", "AMAZON_BEDROCK_METADATA"]
-  }
 }
 
 resource "aws_iam_role" "treatment_knowledge_base" {
@@ -80,20 +60,41 @@ resource "aws_iam_role_policy" "treatment_knowledge_base" {
         Action   = ["s3:GetObject"]
         Resource = "${aws_s3_bucket.golden_manifests.arn}/knowledge-base/*"
       },
+      {
+        Effect = "Allow"
+        Action = [
+          "bedrock:ListFoundationModels",
+          "bedrock:ListCustomModels",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["bedrock:InvokeModel"]
+        Resource = local.treatment_embedding_model_arn
+      },
     ]
   })
 }
 
 resource "aws_bedrockagent_knowledge_base" "treatment" {
   name        = "drift-thesis-treatment"
-  description = "Curated DRIFT taxonomy and validation evidence with service-managed embeddings."
+  description = "Curated DRIFT taxonomy and validation evidence embedded with Amazon Titan Text Embeddings V2."
   role_arn    = aws_iam_role.treatment_knowledge_base.arn
 
   knowledge_base_configuration {
     type = "MANAGED"
 
     managed_knowledge_base_configuration {
-      embedding_model_type = "MANAGED"
+      embedding_model_type = "CUSTOM"
+      embedding_model_arn  = local.treatment_embedding_model_arn
+
+      embedding_model_configuration {
+        bedrock_embedding_model_configuration {
+          dimensions          = 1024
+          embedding_data_type = "FLOAT32"
+        }
+      }
     }
   }
 
