@@ -27,7 +27,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: baseline
-          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-baseline:replace-with-published-tag
+          image: 218733194774.dkr.ecr.ap-southeast-2.amazonaws.com/drift-thesis-baseline:__IMAGE_TAG__
           imagePullPolicy: IfNotPresent
           env:
             - name: AWS_REGION_NAME
